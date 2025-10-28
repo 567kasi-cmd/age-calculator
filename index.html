@@ -157,13 +157,20 @@
     }
     const daysUntilNextBirthday = Math.ceil((nextBirthday - now) / (1000 * 60 * 60 * 24));
 
+    let birthdayMsg = "";
+    if (dob.getDate() === now.getDate() && dob.getMonth() === now.getMonth()) {
+      birthdayMsg = "🎉 Happy Birthday! 🥳";
+    } else {
+      birthdayMsg = `⏳ <b>Days until your next birthday:</b> ${daysUntilNextBirthday} days`;
+    }
+
     result.innerHTML = `
+      ${birthdayMsg}<br><br>
       🎂 You are <b>${years}</b> years, <b>${months}</b> months, and <b>${days}</b> days old.<br><br>
       ⏱️ That's approximately:<br>
       <b>${diffDays.toLocaleString()}</b> days<br>
       <b>${diffHours.toLocaleString()}</b> hours<br>
-      <b>${diffMins.toLocaleString()}</b> minutes<br><br>
-      ⏳ <b>Days until your next birthday:</b> ${daysUntilNextBirthday} days
+      <b>${diffMins.toLocaleString()}</b> minutes
     `;
   }
 </script>
