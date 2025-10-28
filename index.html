@@ -17,25 +17,24 @@
 
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      height: 100vh;
-      margin: 0;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-family: 'Poppins', sans-serif;
       color: #fff;
+      text-align: center;
+      position: relative;
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(15px);
-      padding: 40px;
+      padding: 30px;
       border-radius: 20px;
-      text-align: center;
-      width: 320px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      padding-bottom: 50px; /* ensures footer has breathing space */
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
     h1 {
@@ -72,6 +71,17 @@
       color: #fff;
     }
 
+    /* ✅ Reset button styling */
+    button#reset {
+      background-color: #ff5c5c;
+      color: white;
+      margin-left: 10px;
+    }
+
+    button#reset:hover {
+      background-color: #ff4040;
+    }
+
     .result {
       margin-top: 25px;
       font-size: 18px;
@@ -79,14 +89,13 @@
     }
 
     footer {
-      margin-top: 40px;
-      text-align: center;
-      width: 100%;
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
       font-size: 13px;
       color: rgba(255, 255, 255, 0.8);
-      position: relative;
-      bottom: 0;
-     }
+    }
   </style>
 </head>
 <body>
@@ -95,94 +104,91 @@
     <p>Select your date of birth:</p>
     <input type="date" id="dob" />
     <button onclick="calculateAge()">Calculate</button>
-    <button onclick="resetCalculator()" style="margin-left: 10px; background: #ff4b5c; color: white;">Reset</button>
+    <button id="reset" onclick="resetCalculator()">Reset</button>
 
     <div class="result" id="result"></div>
   </div>
 
   <footer>© 2025 Age Calculator | Made with ❤️</footer>
 
- <script>
-  function calculateAge() {
-    const dobInput = document.getElementById('dob').value;
-    const result = document.getElementById('result');
-    const now = new Date();
+  <script>
+    function calculateAge() {
+      const dobInput = document.getElementById('dob').value;
+      const result = document.getElementById('result');
+      const now = new Date();
 
-    if (!dobInput) {
-      result.innerHTML = "⚠️ Please select your birth date.";
-      return;
+      if (!dobInput) {
+        result.innerHTML = "⚠️ Please select your birth date.";
+        return;
+      }
+
+      const dob = new Date(dobInput);
+
+      if (dob > now) {
+        result.innerHTML = "🚫 Birth date cannot be in the future.";
+        return;
+      }
+
+      if (
+        dob.getDate() === now.getDate() &&
+        dob.getMonth() === now.getMonth() &&
+        dob.getFullYear() === now.getFullYear()
+      ) {
+        result.innerHTML = "🗓️ You entered today's date!";
+        return;
+      }
+
+      if (dob.getDate() === now.getDate() && dob.getMonth() === now.getMonth()) {
+        result.innerHTML = "🎉 Happy Birthday! 🥳";
+      }
+
+      const diffMs = now - dob;
+      const diffMins = Math.floor(diffMs / (1000 * 60));
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      let years = now.getFullYear() - dob.getFullYear();
+      let months = now.getMonth() - dob.getMonth();
+      let days = now.getDate() - dob.getDate();
+
+      if (days < 0) {
+        months--;
+        const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+        days += prevMonth.getDate();
+      }
+
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      let nextBirthday = new Date(now.getFullYear(), dob.getMonth(), dob.getDate());
+      if (nextBirthday < now) {
+        nextBirthday.setFullYear(now.getFullYear() + 1);
+      }
+      const daysUntilNextBirthday = Math.ceil((nextBirthday - now) / (1000 * 60 * 60 * 24));
+
+      let birthdayMsg = "";
+      if (dob.getDate() === now.getDate() && dob.getMonth() === now.getMonth()) {
+        birthdayMsg = "🎉 Happy Birthday! 🥳";
+      } else {
+        birthdayMsg = `⏳ <b>Days until your next birthday:</b> ${daysUntilNextBirthday} days`;
+      }
+
+      result.innerHTML = `
+        ${birthdayMsg}<br><br>
+        🎂 You are <b>${years}</b> years, <b>${months}</b> months, and <b>${days}</b> days old.<br><br>
+        ⏱️ That's approximately:<br>
+        <b>${diffDays.toLocaleString()}</b> days<br>
+        <b>${diffHours.toLocaleString()}</b> hours<br>
+        <b>${diffMins.toLocaleString()}</b> minutes
+      `;
     }
 
-    const dob = new Date(dobInput);
-
-    if (dob > now) {
-      result.innerHTML = "🚫 Birth date cannot be in the future.";
-      return;
+    function resetCalculator() {
+      document.getElementById('dob').value = "";
+      document.getElementById('result').innerHTML = "";
     }
-
-    // 🗓️ If user entered today's date
-    if (
-      dob.getDate() === now.getDate() &&
-      dob.getMonth() === now.getMonth() &&
-      dob.getFullYear() === now.getFullYear()
-    ) {
-      result.innerHTML = "🗓️ You entered today's date!";
-      return;
-    }
-
-    // 🎂 Check if today is their birthday
-    if (dob.getDate() === now.getDate() && dob.getMonth() === now.getMonth()) {
-      result.innerHTML = "🎉 Happy Birthday! 🥳";
-    }
-
-    const diffMs = now - dob;
-    const diffMins = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-    let years = now.getFullYear() - dob.getFullYear();
-    let months = now.getMonth() - dob.getMonth();
-    let days = now.getDate() - dob.getDate();
-
-    if (days < 0) {
-      months--;
-      const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-      days += prevMonth.getDate();
-    }
-
-    if (months < 0) {
-      years--;
-      months += 12;
-    }
-
-    // 🎈 Next Birthday Countdown
-    let nextBirthday = new Date(now.getFullYear(), dob.getMonth(), dob.getDate());
-    if (nextBirthday < now) {
-      nextBirthday.setFullYear(now.getFullYear() + 1);
-    }
-    const daysUntilNextBirthday = Math.ceil((nextBirthday - now) / (1000 * 60 * 60 * 24));
-
-    let birthdayMsg = "";
-    if (dob.getDate() === now.getDate() && dob.getMonth() === now.getMonth()) {
-      birthdayMsg = "🎉 Happy Birthday! 🥳";
-    } else {
-      birthdayMsg = `⏳ <b>Days until your next birthday:</b> ${daysUntilNextBirthday} days`;
-    }
-
-    result.innerHTML = `
-      ${birthdayMsg}<br><br>
-      🎂 You are <b>${years}</b> years, <b>${months}</b> months, and <b>${days}</b> days old.<br><br>
-      ⏱️ That's approximately:<br>
-      <b>${diffDays.toLocaleString()}</b> days<br>
-      <b>${diffHours.toLocaleString()}</b> hours<br>
-      <b>${diffMins.toLocaleString()}</b> minutes
-    `;
-  }
-  function resetCalculator() {
-    document.getElementById('dob').value = "";
-    document.getElementById('result').innerHTML = "";
-  }
-</script>
-  
+  </script>
 </body>
 </html>
