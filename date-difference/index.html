@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Date Difference Calculator — The Age Finder Tools</title>
+  <meta name="description" content="Calculate difference between any two dates: years, months, days, hours, minutes. Useful for age differences, project timelines, and countdowns." />
+  <meta property="og:title" content="Date Difference Calculator — The Age Finder Tools" />
+  <meta property="og:description" content="Calculate differences between two dates in years, months, days, hours and minutes." />
+  <meta property="og:url" content="https://theagefinder.pages.dev/date-difference/" />
+  <link rel="canonical" href="https://theagefinder.pages.dev/date-difference/" />
+  <style>
+    body{font-family:Inter,Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;margin:0;min-height:100vh;display:flex;justify-content:center;align-items:center}
+    .card{background:rgba(255,255,255,0.08);padding:22px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.25);width:360px}
+    h1{margin:0 0 8px;font-size:20px}
+    label{display:block;margin-top:8px;font-size:13px;color:#eaeefe}
+    input{width:100%;padding:8px;border-radius:8px;border:none;margin-top:6px}
+    .row{display:flex;gap:8px}
+    .btns{margin-top:12px;display:flex;gap:8px;justify-content:flex-end}
+    button{padding:9px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
+    .calc{background:#fff;color:#764ba2}
+    .reset{background:#ff5c5c;color:#fff}
+    .result{margin-top:12px;background:rgba(255,255,255,0.06);padding:10px;border-radius:8px}
+    .nav{font-size:13px;margin-bottom:8px}
+    .nav a{color:#fff;text-decoration:none;margin-right:10px;opacity:0.95}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="nav"><a href="/">Home</a><a href="/bmi-calculator/">BMI Calculator</a></div>
+    <h1>Date Difference</h1>
+    <label>Start date</label>
+    <input id="start" type="date" />
+    <label>End date</label>
+    <input id="end" type="date" />
+    <div class="btns">
+      <button class="reset" onclick="resetDates()">Reset</button>
+      <button class="calc" onclick="calculateDiff()">Calculate</button>
+    </div>
+    <div id="diff-result" class="result" aria-live="polite"></div>
+  </div>
+
+<script>
+function calculateDiff(){
+  const s = document.getElementById('start').value;
+  const e = document.getElementById('end').value;
+  const out = document.getElementById('diff-result');
+  if (!s || !e){ out.innerHTML='⚠️ Please enter both dates.'; return; }
+
+  const start = new Date(s);
+  const end = new Date(e);
+  if (isNaN(start) || isNaN(end)){ out.innerHTML='🚫 Invalid dates'; return; }
+  if (end < start){ out.innerHTML='⚠️ End date is before start date.'; return; }
+
+  // years/months/days calculation
+  let years = end.getFullYear() - start.getFullYear();
+  let months = end.getMonth() - start.getMonth();
+  let days = end.getDate() - start.getDate();
+
+  if (days < 0){
+    months--;
+    const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+    days += prevMonth.getDate();
+  }
+  if (months < 0){
+    years--;
+    months += 12;
+  }
+
+  const ms = end - start;
+  const totalDays = Math.floor(ms / (1000*60*60*24));
+  const totalHours = Math.floor(ms / (1000*60*60));
+  const totalMinutes = Math.floor(ms / (1000*60));
+
+  out.innerHTML = `<b>Difference:</b> ${years} years, ${months} months, ${days} days<br>
+                   <b>Total:</b> ${totalDays.toLocaleString()} days, ${totalHours.toLocaleString()} hours, ${totalMinutes.toLocaleString()} minutes`;
+}
+
+function resetDates(){
+  document.getElementById('start').value = '';
+  document.getElementById('end').value = '';
+  document.getElementById('diff-result').innerHTML = '';
+}
+</script>
+</body>
+</html>
