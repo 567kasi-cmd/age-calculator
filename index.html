@@ -26,91 +26,117 @@
   gtag('config', 'G-YXWTMKPK1H');
 </script>
 
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      font-family: 'Poppins', sans-serif;
-      color: #fff;
-      text-align: center;
-      position: relative;
-    }
+ <style>
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    text-align: center;
+    position: relative;
+  }
 
-    .container {
-      padding: 30px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    }
+  .container {
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
 
-    h1 {
-      margin-bottom: 10px;
-      font-size: 26px;
-      letter-spacing: 1px;
-    }
+  h1 {
+    margin-bottom: 10px;
+    font-size: 26px;
+    letter-spacing: 1px;
+  }
 
-    input[type="date"] {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      margin-top: 15px;
-      outline: none;
-    }
+  input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-top: 15px;
+    outline: none;
+  }
 
-    button {
-      margin-top: 20px;
-      background: #fff;
-      color: #764ba2;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.3s;
-      font-weight: bold;
-    }
+  button {
+    margin-top: 20px;
+    background: #fff;
+    color: #764ba2;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+  }
 
-    button:hover {
-      background: #764ba2;
-      color: #fff;
-    }
+  button:hover {
+    background: #764ba2;
+    color: #fff;
+  }
 
-    /* ✅ Reset button styling */
-    button#reset {
-      background-color: #ff5c5c;
-      color: white;
-      margin-left: 10px;
-    }
+  /* ✅ Reset button styling */
+  button#reset {
+    background-color: #ff5c5c;
+    color: white;
+    margin-left: 10px;
+  }
 
-    button#reset:hover {
-      background-color: #ff4040;
-    }
+  button#reset:hover {
+    background-color: #ff4040;
+  }
 
-    .result {
-      margin-top: 25px;
-      font-size: 18px;
-      line-height: 1.6;
-    }
+  .result {
+    margin-top: 25px;
+    font-size: 18px;
+    line-height: 1.6;
+  }
 
-    footer {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.8);
-    }
-  </style>
+  /* ✅ Navigation bar styles */
+  .nav {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  .nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 12px;
+    opacity: 0.9;
+  }
+
+  .nav a:hover {
+    text-decoration: underline;
+    opacity: 1;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+  }
+</style>
+
 </head>
 <body>
   <div class="container">
+    <div class="card" role="main">
+    <div class="nav">
+      <a href="/">Home</a>
+      <a href="/bmi-calculator/">BMI Calculator</a>
+      <a href="/date-difference/">Date Difference</a>
+    </div>
+      
     <h1>Age Calculator</h1>
     <p>Select your date of birth:</p>
     <input type="date" id="dob" />
@@ -119,7 +145,7 @@
 
     <div class="result" id="result"></div>
   </div>
-
+  </div>
   <footer>© 2025 Age Calculator | Made with ❤️</footer>
 
   <script>
