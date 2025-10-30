@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏦 Loan Comparison Calculator | The Age Finder</title>
+  <meta name="description" content="Compare multiple loans instantly! Calculate and visualize EMIs for up to three loans using our free Loan Comparison Calculator.">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <h1>🏦 Loan Comparison Calculator</h1>
+  </header>
+
+  <main>
+    <form id="loanForm">
+      <div id="loanInputs">
+        <div class="loan-block">
+          <h3>Loan 1</h3>
+          <label>Loan Amount (₹): <input type="number" class="amount" required></label><br>
+          <label>Interest Rate (%): <input type="number" class="rate" step="0.01" required></label><br>
+          <label>Tenure (months): <input type="number" class="months" required></label><br>
+        </div>
+      </div>
+
+      <button type="button" id="addLoan">+ Add Another Loan</button>
+      <button type="submit">Compare</button>
+      <button type="button" id="reset">Reset</button>
+    </form>
+
+    <section id="results">
+      <h2>📊 EMI Comparison Result</h2>
+      <canvas id="emiChart"></canvas>
+      <div id="resultText"></div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="/emi-calculator/">← Back to EMI Calculators</a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
