@@ -3,14 +3,114 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EMI Calculators | The Age Finder</title>
-  <meta name="description" content="Use our free EMI Calculators for Home Loan, Car Loan, Personal Loan, and more. Calculate your monthly EMIs instantly.">
+  <title>💵 EMI Calculators | The Age Finder</title>
+  <meta name="description" content="Use our free EMI Calculators for Home, Car, Personal, Business, and Education Loans. Instantly calculate your monthly EMIs and compare loan options.">
   <link rel="stylesheet" href="/style.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    header {
+      text-align: center;
+      padding: 50px 20px 20px;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      color: #ffd700;
+      text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+    }
+
+    header p {
+      font-size: 1rem;
+      opacity: 0.9;
+      color: #fff;
+    }
+
+    .emi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+      padding: 40px 30px;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 25px;
+      color: #fff;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.05);
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .card h2 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: auto;
+      padding: 20px;
+    }
+
+    footer a {
+      color: #ffd700;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+      color: #fff;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
+
 <body>
   <header>
-    <h1>EMI Calculators</h1>
-    <p>Find your loan EMIs quickly and accurately with our simple online tools.</p>
+    <h1>💵 EMI Calculators</h1>
+    <p>Find your loan EMIs quickly and accurately with our simple, easy-to-use tools.</p>
   </header>
 
   <main class="emi-grid">
@@ -51,85 +151,7 @@
   </main>
 
   <footer>
-    <a href="/">← Back to Age Finder</a>
+    <a href="/">← Back to The Age Finder</a>
   </footer>
-
-  <style>
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: #fff;
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  header {
-    text-align: center;
-    padding: 40px 20px 20px;
-  }
-
-  header h1 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-    color: #fff;
-  }
-
-  header p {
-    font-size: 1rem;
-    opacity: 0.9;
-  }
-
-  .emi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 25px;
-    padding: 40px 30px;
-    width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .card {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
-    border-radius: 20px;
-    padding: 25px;
-    color: #fff;
-    text-decoration: none;
-    text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .card:hover {
-    transform: translateY(-10px) scale(1.05);
-    background: rgba(255, 255, 255, 0.25);
-  }
-
-  .card h2 {
-    font-size: 1.3rem;
-    margin-bottom: 10px;
-  }
-
-  footer {
-    text-align: center;
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.8);
-    margin-top: auto;
-    padding: 15px;
-  }
-
-  footer a {
-    color: #ffd700;
-    text-decoration: none;
-  }
-
-  footer a:hover {
-    text-decoration: underline;
-  }
-</style>
 </body>
 </html>
