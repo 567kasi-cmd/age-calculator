@@ -14,143 +14,196 @@
   <meta property="og:url" content="https://theagefinder.pages.dev/">
   <meta property="og:type" content="website" />
   <meta property="og:image" content="/agecalc-preview.png" />
+  
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YXWTMKPK1H"></script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3098158884275893"
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXWTMKPK1H"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3098158884275893"
      crossorigin="anonymous"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YXWTMKPK1H');
+  </script>
 
-  gtag('config', 'G-YXWTMKPK1H');
-</script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      text-align: center;
+      position: relative;
+    }
 
- <style>
-  body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    font-family: 'Poppins', sans-serif;
-    color: #fff;
-    text-align: center;
-    position: relative;
-  }
+    .container {
+      padding: 30px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
 
-  .container {
-    padding: 30px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  }
+    h1 {
+      margin-bottom: 10px;
+      font-size: 26px;
+      letter-spacing: 1px;
+    }
 
-  h1 {
-    margin-bottom: 10px;
-    font-size: 26px;
-    letter-spacing: 1px;
-  }
+    input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-top: 15px;
+      outline: none;
+    }
 
-  input[type="date"] {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    margin-top: 15px;
-    outline: none;
-  }
+    button {
+      margin-top: 20px;
+      background: #fff;
+      color: #764ba2;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: bold;
+    }
 
-  button {
-    margin-top: 20px;
-    background: #fff;
-    color: #764ba2;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
-    font-weight: bold;
-  }
+    button:hover {
+      background: #764ba2;
+      color: #fff;
+    }
 
-  button:hover {
-    background: #764ba2;
-    color: #fff;
-  }
+    /* ✅ Reset button styling */
+    button#reset {
+      background-color: #ff5c5c;
+      color: white;
+      margin-left: 10px;
+    }
 
-  /* ✅ Reset button styling */
-  button#reset {
-    background-color: #ff5c5c;
-    color: white;
-    margin-left: 10px;
-  }
+    button#reset:hover {
+      background-color: #ff4040;
+    }
 
-  button#reset:hover {
-    background-color: #ff4040;
-  }
+    .result {
+      margin-top: 25px;
+      font-size: 18px;
+      line-height: 1.6;
+    }
 
-  .result {
-    margin-top: 25px;
-    font-size: 18px;
-    line-height: 1.6;
-  }
+    /* ✅ Navigation bar styles */
+    .nav {
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
 
-  /* ✅ Navigation bar styles */
-  .nav {
-    font-size: 13px;
-    margin-bottom: 10px;
-  }
+    .nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-right: 12px;
+      opacity: 0.9;
+    }
 
-  .nav a {
-    color: #fff;
-    text-decoration: none;
-    margin-right: 12px;
-    opacity: 0.9;
-  }
+    .nav a:hover {
+      text-decoration: underline;
+      opacity: 1;
+    }
 
-  .nav a:hover {
-    text-decoration: underline;
-    opacity: 1;
-  }
+    /* ✅ More Tools Section */
+    .more-tools {
+      margin-top: 50px;
+      text-align: center;
+      color: #fff;
+    }
 
-  footer {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.8);
-  }
-</style>
+    .more-tools h2 {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      color: #ffd700;
+    }
 
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      justify-items: center;
+    }
+
+    .tool-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 15px;
+      text-decoration: none;
+      color: white;
+      transition: transform 0.2s ease, background 0.2s ease;
+      width: 90%;
+      max-width: 250px;
+    }
+
+    .tool-card:hover {
+      transform: scale(1.05);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+  </style>
 </head>
+
 <body>
   <div class="container">
     <div class="card" role="main">
-    <div class="nav">
-      <a href="/">Home</a>
-      <a href="/bmi-calculator/">BMI Calculator</a>
-      <a href="/date-difference/">Date Difference</a>
-      <a href="/emi-calculator/" class="card">
-      <h2>💰 EMI Calculator</h2>
-      <p>Calculate Home, Car, Personal Loan EMIs easily.</p>
-</a>
-    </div>
+      <div class="nav">
+        <a href="/">Home</a>
+        <a href="/bmi-calculator/">BMI Calculator</a>
+        <a href="/date-difference/">Date Difference</a>
+        <a href="/emi-calculator/">EMI Calculator</a>
+      </div>
       
-    <h1>Age Calculator</h1>
-    <p>Select your date of birth:</p>
-    <input type="date" id="dob" />
-    <button onclick="calculateAge()">Calculate</button>
-    <button id="reset" onclick="resetCalculator()">Reset</button>
+      <h1>Age Calculator</h1>
+      <p>Select your date of birth:</p>
+      <input type="date" id="dob" />
+      <button onclick="calculateAge()">Calculate</button>
+      <button id="reset" onclick="resetCalculator()">Reset</button>
 
-    <div class="result" id="result"></div>
+      <div class="result" id="result"></div>
+    </div>
   </div>
-  </div>
-  <footer>© 2025 Age Calculator | Made with ❤️</footer>
+
+  <!-- ✅ More Tools Section -->
+  <section class="more-tools">
+    <h2>🧠 Try Our Other Tools</h2>
+    <div class="tools-grid">
+      <a href="/bmi-calculator/" class="tool-card">
+        <h3>⚖️ BMI Calculator</h3>
+        <p>Calculate your Body Mass Index quickly and accurately.</p>
+      </a>
+
+      <a href="/date-difference/" class="tool-card">
+        <h3>📅 Date Difference Calculator</h3>
+        <p>Find the difference between two dates in days, months, or years.</p>
+      </a>
+
+      <a href="/emi-calculator/" class="tool-card">
+        <h3>💰 EMI Calculator</h3>
+        <p>Estimate your monthly loan payments instantly.</p>
+      </a>
+    </div>
+  </section>
+
+  <footer>© 2025 Age Calculator | Made with ❤️ by Kasi</footer>
 
   <script>
     function calculateAge() {
@@ -164,17 +217,12 @@
       }
 
       const dob = new Date(dobInput);
-
       if (dob > now) {
         result.innerHTML = "🚫 Birth date cannot be in the future.";
         return;
       }
 
-      if (
-        dob.getDate() === now.getDate() &&
-        dob.getMonth() === now.getMonth() &&
-        dob.getFullYear() === now.getFullYear()
-      ) {
+      if (dob.getDate() === now.getDate() && dob.getMonth() === now.getMonth() && dob.getFullYear() === now.getFullYear()) {
         result.innerHTML = "🗓️ You entered today's date!";
         return;
       }
