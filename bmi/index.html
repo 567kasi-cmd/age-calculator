@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 🔹 SEO and Branding -->
+  <title>⚖️ BMI Calculator | The Age Finder</title>
+  <meta name="description" content="Instantly calculate your Body Mass Index (BMI) with The Age Finder. Find out if you're underweight, healthy, overweight, or obese using our free online tool." />
+  <meta name="keywords" content="BMI calculator, body mass index, health calculator, weight check, fitness, The Age Finder" />
+  <meta name="author" content="The Age Finder Team" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- 🔹 Open Graph (for SEO previews on Google, WhatsApp, Facebook) -->
+  <meta property="og:title" content="BMI Calculator | The Age Finder" />
+  <meta property="og:description" content="Check your BMI instantly with The Age Finder’s free online calculator. Simple, accurate, and quick." />
+  <meta property="og:url" content="https://theagefinder.pages.dev/bmi.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/agecalc-preview.png" />
+
+   <!-- 🔹 Google Analytics & Ads -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXWTMKPK1H"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3098158884275893"
+     crossorigin="anonymous"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YXWTMKPK1H');
+  </script>
+
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    header {
+      text-align: center;
+      padding: 50px 20px 20px;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      color: #ffd700;
+      text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+    }
+
+    header p {
+      font-size: 1rem;
+      opacity: 0.9;
+      color: #fff;
+    }
+
+    .nav {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .nav a {
+      color: #ffd700;
+      text-decoration: none;
+      margin: 0 10px;
+      transition: 0.3s;
+      opacity: 0.95;
+    }
+
+    .nav a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    main {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 30px;
+    }
+
+    .calculator {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 25px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 500;
+    }
+
+    input {
+      width: 90%;
+      padding: 8px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background: #ffd700;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #fff;
+      color: #333;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: auto;
+      padding: 20px;
+    }
+
+    footer a {
+      color: #ffd700;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+      color: #fff;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>⚖️ BMI Calculator</h1>
+    <p>Check your Body Mass Index instantly and track your fitness level.</p>
+    <div class="nav">
+      <a href="/">🏠 Home</a>
+      <a href="/age-calculator/">🎂 Age Calculator</a>
+      <a href="/bmi-calculator/">⚖️ BMI</a>
+      <a href="/date-difference/">📅 Date Diff</a>
+      <a href="/emi-calculator/">💵 EMI</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="calculator">
+      <label for="weight">Weight (kg)</label>
+      <input type="number" id="weight" placeholder="Enter weight in kilograms">
+
+      <label for="height">Height (cm)</label>
+      <input type="number" id="height" placeholder="Enter height in centimeters">
+
+      <button onclick="calculateBMI()">Calculate BMI</button>
+
+      <div class="result" id="result"></div>
+    </div>
+  </main>
+
+  <footer>
+    <a href="/">← Back to The Age Finder</a>
+  </footer>
+
+  <script>
+    function calculateBMI() {
+      const weight = parseFloat(document.getElementById('weight').value);
+      const height = parseFloat(document.getElementById('height').value) / 100;
+
+      if (!weight || !height) {
+        document.getElementById('result').innerHTML = "⚠️ Please enter valid weight and height.";
+        return;
+      }
+
+      const bmi = (weight / (height * height)).toFixed(1);
+      let category = '';
+
+      if (bmi < 18.5) category = 'Underweight';
+      else if (bmi < 24.9) category = 'Normal weight';
+      else if (bmi < 29.9) category = 'Overweight';
+      else category = 'Obese';
+
+      document.getElementById('result').innerHTML = `Your BMI is <b>${bmi}</b> (${category})`;
+    }
+  </script>
+</body>
+</html>
