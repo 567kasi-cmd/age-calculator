@@ -6,92 +6,225 @@
   <title>Video Tools — The Age Finder</title>
   <meta name="description" content="YouTube + Instagram Reels downloader UI (frontend)." />
   <style>
-    body{font-family:Inter,system-ui,Arial;margin:0;background:#0f172a;color:#e6eef8}
-    .wrap{max-width:900px;margin:40px auto;padding:24px;background:rgba(255,255,255,0.03);border-radius:12px}
-    input,select,button{font-size:16px;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
-    .row{display:flex;gap:10px;align-items:center}
-    .col{display:flex;flex-direction:column;gap:8px}
-    pre{white-space:pre-wrap;background:rgba(0,0,0,0.2);padding:12px;border-radius:8px}
-    a.tool-card{display:block;padding:12px;border-radius:10px;text-decoration:none;color:inherit}
+    /* Theme (matches Age Calculator) */
+    :root{
+      --bg1:#667eea;
+      --bg2:#764ba2;
+      --card-bg: rgba(255,255,255,0.08);
+      --accent: #ffd700;
+      --muted: rgba(255,255,255,0.8);
+    }
+    body{
+      font-family: Poppins, Inter, system-ui, Arial;
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: #fff;
+      padding:40px 16px;
+    }
+    .container{
+      width:100%;
+      max-width:980px;
+      background:var(--card-bg);
+      padding:24px;
+      border-radius:16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    h1{ margin:0 0 8px 0; font-size:24px; }
+    p.lead{ margin:0 0 18px 0; color:var(--muted); font-size:14px; }
+    .row{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    label{ font-size:13px; color:var(--muted); display:block; margin-bottom:6px; }
+    input[type="text"], select{
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.06);
+      background:transparent;
+      color:inherit;
+      outline:none;
+      font-size:15px;
+    }
+    .controls{ display:grid; grid-template-columns: 2fr 1fr; gap:12px; margin-top:12px; }
+    button{
+      padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:600;
+      background: #fff; color:var(--bg2);
+    }
+    button.secondary{ background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.08); }
+    .meta{
+      margin-top:18px; display:flex; gap:12px; align-items:center;
+      background: rgba(0,0,0,0.12); padding:12px; border-radius:10px;
+    }
+    .thumb{ width:120px; height:68px; background:#222; border-radius:6px; object-fit:cover; }
+    .meta .info{ flex:1; }
+    .meta .info h3{ margin:0 0 6px 0; font-size:16px; }
+    .meta .info p{ margin:0; color:var(--muted); font-size:13px; }
+    .options{ display:flex; gap:12px; margin-top:12px; flex-wrap:wrap; }
+    pre{ background: rgba(0,0,0,0.2); padding:10px; border-radius:8px; color:#fff; font-size:13px; margin-top:12px; overflow:auto; }
+    .tools-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap:12px; margin-top:18px; }
+    a.tool-card{ display:block; padding:12px; text-decoration:none; border-radius:10px; background: rgba(255,255,255,0.03); color:inherit; text-align:center; }
+    footer{ margin-top:18px; font-size:13px; color:var(--muted); text-align:center; }
+    @media (max-width:720px){ .controls{ grid-template-columns: 1fr; } .thumb{ width:100px; height:56px } }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>Video Tools — Downloader UI</h1>
-    <p>Frontend UI only. Backend endpoints are required for real downloads: /api/youtube/* and /api/instagram/*.</p>
+  <div class="container">
+    <h1>Video Tools — Downloader</h1>
+    <p class="lead">Paste a YouTube video or Instagram Reel URL. Choose quality and format (MP4 / video-only / MP3).</p>
 
-    <div class="col">
+    <div>
       <label>Service</label>
       <select id="service">
         <option value="youtube">YouTube</option>
         <option value="instagram">Instagram Reels</option>
       </select>
-
-      <label>Video URL</label>
-      <input id="videoUrl" placeholder="https://..." />
-
-      <div class="row">
-        <button id="infoBtn">Fetch Info</button>
-        <button id="downloadBtn">Start Download</button>
-      </div>
-
-      <div id="status" style="margin-top:10px">Status: idle</div>
-      <pre id="infoBox"></pre>
     </div>
 
-    <section style="margin-top:22px">
-      <h3>Extra tools</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px">
-        <a class="tool-card" href="/bmi-calculator/">BMI Calculator</a>
-        <a class="tool-card" href="/date-difference/">Date Difference</a>
-        <a class="tool-card" href="/">Back to Home</a>
+    <div style="margin-top:12px">
+      <label>Video URL</label>
+      <input id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." />
+    </div>
+
+    <div class="controls">
+      <div>
+        <label>Quality</label>
+        <select id="quality">
+          <option value="highest">Best (highest)</option>
+          <option value="high">High (720p-ish)</option>
+          <option value="medium">Medium (480p)</option>
+          <option value="low">Low (360p/240p)</option>
+        </select>
       </div>
+
+      <div>
+        <label>Format</label>
+        <select id="format">
+          <option value="mp4">MP4 (video + audio)</option>
+          <option value="video-only">MP4 (video only)</option>
+          <option value="mp3">MP3 (audio only)</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:12px; margin-top:12px; align-items:center; flex-wrap:wrap">
+      <button id="infoBtn">Fetch Info</button>
+      <button id="downloadBtn">Download</button>
+      <button id="resetBtn" class="secondary">Reset</button>
+      <div id="status" style="margin-left:auto;color:var(--muted)">Status: idle</div>
+    </div>
+
+    <div id="metaBox" style="display:none" class="meta">
+      <img id="thumb" class="thumb" src="" alt="thumbnail" />
+      <div class="info">
+        <h3 id="title">—</h3>
+        <p id="duration">Duration: —</p>
+        <p id="author">Author: —</p>
+      </div>
+    </div>
+
+    <pre id="infoBox" style="display:none"></pre>
+
+    <section class="tools-grid" aria-hidden="true">
+      <a class="tool-card" href="/bmi-calculator/">⚖️ BMI Calculator</a>
+      <a class="tool-card" href="/date-difference/">📅 Date Difference</a>
+      <a class="tool-card" href="/">🏠 Back to Home</a>
     </section>
+
+    <footer>© 2025 Age Calculator | Use only with permission</footer>
   </div>
 
-  <script>
-    const infoBox = document.getElementById('infoBox')
-    const status = document.getElementById('status')
-    const serviceEl = document.getElementById('service')
-    const urlEl = document.getElementById('videoUrl')
+<script>
+  const status = document.getElementById('status')
+  const infoBox = document.getElementById('infoBox')
+  const metaBox = document.getElementById('metaBox')
+  const thumb = document.getElementById('thumb')
+  const titleEl = document.getElementById('title')
+  const durationEl = document.getElementById('duration')
+  const authorEl = document.getElementById('author')
 
-    // IMPORTANT: For testing, put a token here that matches your Worker secret (only TEMPORARY)
-    const TEST_API_KEY = '' // <-- set to 'test-token' temporarily while debugging
+  const serviceEl = document.getElementById('service')
+  const urlEl = document.getElementById('videoUrl')
+  const qualityEl = document.getElementById('quality')
+  const formatEl = document.getElementById('format')
 
-    document.getElementById('infoBtn').addEventListener('click', async ()=>{
-      const url = urlEl.value.trim(); if(!url) return alert('Enter a url')
-      status.innerText = 'Fetching info...'; infoBox.textContent = ''
-      try{
-        const svc = serviceEl.value
-        const res = await fetch('/api/' + svc + '/info?url=' + encodeURIComponent(url), { headers: {'x-api-key': TEST_API_KEY }})
-        if(!res.ok) throw new Error(await res.text())
-        const j = await res.json()
-        infoBox.textContent = JSON.stringify(j, null, 2)
-        status.innerText = 'Info loaded'
-      }catch(e){ status.innerText = 'Error: '+e.message }
-    })
+  // TEMP TEST KEY - replace with secure flow in production
+  const TEST_API_KEY = 'test-token'
 
-    document.getElementById('downloadBtn').addEventListener('click', async ()=>{
-      const url = urlEl.value.trim(); if(!url) return alert('Enter a url')
-      status.innerText = 'Requesting download token...'
-      try{
-        const svc = serviceEl.value
-        const res = await fetch('/api/' + svc + '/download', {
-          method:'POST',
-          headers:{'Content-Type':'application/json','x-api-key': TEST_API_KEY},
-          body: JSON.stringify({url})
-        })
-        if(!res.ok) throw new Error(await res.text())
-        const j = await res.json()
-        if(j.downloadUrl){
-          window.open(j.downloadUrl,'_blank')
-          status.innerText = 'Download started'
-        } else {
-          status.innerText = 'Expected downloadUrl from server'
-          infoBox.textContent = JSON.stringify(j, null, 2)
-        }
-      }catch(e){ status.innerText = 'Error: '+e.message }
-    })
-  </script>
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    urlEl.value = ''
+    infoBox.style.display = 'none'
+    metaBox.style.display = 'none'
+    status.innerText = 'Status: idle'
+  })
+
+  document.getElementById('infoBtn').addEventListener('click', async ()=>{
+    const url = urlEl.value.trim()
+    if(!url) return alert('Enter a URL')
+    status.innerText = 'Status: fetching info...'
+    infoBox.style.display = 'none'
+    try {
+      const svc = serviceEl.value
+      const res = await fetch('/api/' + svc + '/info?url=' + encodeURIComponent(url), { headers: {'x-api-key': TEST_API_KEY} })
+      if(!res.ok) throw new Error(await res.text())
+      const j = await res.json()
+      infoBox.textContent = JSON.stringify(j, null, 2)
+      infoBox.style.display = 'block'
+      // fill meta
+      if(j.thumbnails && j.thumbnails.length) thumb.src = j.thumbnails[j.thumbnails.length-1].url
+      titleEl.innerText = j.title || j.videoTitle || '—'
+      durationEl.innerText = 'Duration: ' + (j.lengthSeconds ? formatDuration(j.lengthSeconds) : (j.duration || '—'))
+      authorEl.innerText = 'Author: ' + (j.author || j.channelName || '—')
+      metaBox.style.display = 'flex'
+      status.innerText = 'Status: info loaded'
+    } catch(e){
+      status.innerText = 'Error: ' + e.message
+    }
+  })
+
+  document.getElementById('downloadBtn').addEventListener('click', async ()=>{
+    const url = urlEl.value.trim()
+    if(!url) return alert('Enter a URL')
+    const svc = serviceEl.value
+    const quality = qualityEl.value
+    const format = formatEl.value
+    status.innerText = 'Status: requesting download...'
+    try{
+      const res = await fetch('/api/' + svc + '/download', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'x-api-key': TEST_API_KEY },
+        body: JSON.stringify({ url, quality, format })
+      })
+      if(!res.ok) throw new Error(await res.text())
+      const j = await res.json()
+      if(j.downloadUrl){
+        window.open(j.downloadUrl, '_blank')
+        status.innerText = 'Status: download launched'
+        return
+      }
+      // If server streams file directly (not returning downloadUrl), try to handle
+      if(j.stream === true && j.message){
+        status.innerText = j.message
+        return
+      }
+      // show any returned JSON
+      infoBox.textContent = JSON.stringify(j, null, 2)
+      infoBox.style.display = 'block'
+      status.innerText = 'Status: received response'
+    }catch(e){
+      status.innerText = 'Error: '+e.message
+    }
+  })
+
+  function formatDuration(sec){
+    sec = Number(sec)
+    if(isNaN(sec)) return sec
+    const h = Math.floor(sec/3600); const m = Math.floor((sec%3600)/60); const s = sec%60
+    return (h? h + 'h ':'') + (m? m + 'm ':'') + s + 's'
+  }
+</script>
 </body>
 </html>
