@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Video Tools — The Age Finder</title>
+  <meta name="description" content="YouTube + Instagram Reels downloader UI (frontend)." />
+  <style>
+    body{font-family:Inter,system-ui,Arial;margin:0;background:#0f172a;color:#e6eef8}
+    .wrap{max-width:900px;margin:40px auto;padding:24px;background:rgba(255,255,255,0.03);border-radius:12px}
+    input,select,button{font-size:16px;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+    .row{display:flex;gap:10px;align-items:center}
+    .col{display:flex;flex-direction:column;gap:8px}
+    pre{white-space:pre-wrap;background:rgba(0,0,0,0.2);padding:12px;border-radius:8px}
+    a.tool-card{display:block;padding:12px;border-radius:10px;text-decoration:none;color:inherit}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Video Tools — Downloader UI</h1>
+    <p>Frontend UI only. Backend endpoints are required for real downloads: /api/youtube/* and /api/instagram/*.</p>
+
+    <div class="col">
+      <label>Service</label>
+      <select id="service">
+        <option value="youtube">YouTube</option>
+        <option value="instagram">Instagram Reels</option>
+      </select>
+
+      <label>Video URL</label>
+      <input id="videoUrl" placeholder="https://..." />
+
+      <div class="row">
+        <button id="infoBtn">Fetch Info</button>
+        <button id="downloadBtn">Start Download</button>
+      </div>
+
+      <div id="status" style="margin-top:10px">Status: idle</div>
+      <pre id="infoBox"></pre>
+    </div>
+
+    <section style="margin-top:22px">
+      <h3>Extra tools</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px">
+        <a class="tool-card" href="/bmi-calculator/">BMI Calculator</a>
+        <a class="tool-card" href="/date-difference/">Date Difference</a>
+        <a class="tool-card" href="/">Back to Home</a>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const infoBox = document.getElementById('infoBox')
+    const status = document.getElementById('status')
+    const serviceEl = document.getElementById('service')
+    const urlEl = document.getElementById('videoUrl')
+
+    // IMPORTANT: For testing, put a token here that matches your Worker secret (only TEMPORARY)
+    const TEST_API_KEY = '' // <-- set to 'test-token' temporarily while debugging
+
+    document.getElementById('infoBtn').addEventListener('click', async ()=>{
+      const url = urlEl.value.trim(); if(!url) return alert('Enter a url')
+      status.innerText = 'Fetching info...'; infoBox.textContent = ''
+      try{
+        const svc = serviceEl.value
+        const res = await fetch('/api/' + svc + '/info?url=' + encodeURIComponent(url), { headers: {'x-api-key': TEST_API_KEY }})
+        if(!res.ok) throw new Error(await res.text())
+        const j = await res.json()
+        infoBox.textContent = JSON.stringify(j, null, 2)
+        status.innerText = 'Info loaded'
+      }catch(e){ status.innerText = 'Error: '+e.message }
+    })
+
+    document.getElementById('downloadBtn').addEventListener('click', async ()=>{
+      const url = urlEl.value.trim(); if(!url) return alert('Enter a url')
+      status.innerText = 'Requesting download token...'
+      try{
+        const svc = serviceEl.value
+        const res = await fetch('/api/' + svc + '/download', {
+          method:'POST',
+          headers:{'Content-Type':'application/json','x-api-key': TEST_API_KEY},
+          body: JSON.stringify({url})
+        })
+        if(!res.ok) throw new Error(await res.text())
+        const j = await res.json()
+        if(j.downloadUrl){
+          window.open(j.downloadUrl,'_blank')
+          status.innerText = 'Download started'
+        } else {
+          status.innerText = 'Expected downloadUrl from server'
+          infoBox.textContent = JSON.stringify(j, null, 2)
+        }
+      }catch(e){ status.innerText = 'Error: '+e.message }
+    })
+  </script>
+</body>
+</html>
