@@ -92,85 +92,109 @@
     <footer>© 2025 Age Calculator — Debug Mode (remove when fixed)</footer>
   </div>
 
-<script>
-  const status = document.getElementById('status')
-  const infoBox = document.getElementById('infoBox')
-  const metaBox = document.getElementById('metaBox')
-  const thumb = document.getElementById('thumb')
-  const titleEl = document.getElementById('title')
-  const durationEl = document.getElementById('duration')
-  const authorEl = document.getElementById('author')
+// Robust Download handler — REPLACE your existing downloadBtn handler with this
+document.getElementById('downloadBtn').addEventListener('click', async () => {
+  const url = urlEl.value.trim();
+  if (!url) return alert('Enter a URL');
 
-  const serviceEl = document.getElementById('service')
-  const urlEl = document.getElementById('videoUrl')
-  const qualityEl = document.getElementById('quality')
-  const formatEl = document.getElementById('format')
+  const svc = serviceEl.value;
+  const quality = (typeof qualityEl !== 'undefined' && qualityEl) ? qualityEl.value : undefined;
+  const format = (typeof formatEl !== 'undefined' && formatEl) ? formatEl.value : undefined;
 
-  // <-- REPLACE existing TEST_API_KEY line with these two lines -->
-const WORKER_BASE = 'https://floral-sunset-9ef5.567kasi.workers.dev'
-const TEST_API_KEY = 'test-token'  // debug key (temporary). Keep secret in production.
+  status.innerText = 'Status: requesting download...';
+  infoBox.style.display = 'none';
 
+  try {
+    const endpoint = (typeof WORKER_BASE === 'string' && WORKER_BASE) ?
+      WORKER_BASE + '/api/' + svc + '/download' : '/api/' + svc + '/download';
 
-  document.getElementById('resetBtn').addEventListener('click', ()=> {
-    urlEl.value = ''; infoBox.style.display='none'; metaBox.style.display='none'; status.innerText = 'Status: idle'
-  })
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': TEST_API_KEY || '' },
+      body: JSON.stringify({ url, quality, format })
+    });
 
-  // DEBUG-SAFE: show raw response (text) rather than failing on res.json()
-  document.getElementById('infoBtn').addEventListener('click', async ()=>{
-    const url = urlEl.value.trim(); if(!url) return alert('Enter a URL')
-    status.innerText = 'Status: fetching info...'; infoBox.style.display='none'; metaBox.style.display='none'
+    // read headers & content-type
+    const contentType = (response.headers.get('content-type') || '').toLowerCase();
+
+    // If not OK, show raw text for debugging
+    if (!response.ok) {
+      const txt = await response.text().catch(() => '[no body]');
+      infoBox.style.display = 'block';
+      infoBox.textContent = `HTTP ${response.status}\nContent-Type: ${contentType}\n\n${txt}`;
+      status.innerText = 'Error: HTTP ' + response.status;
+      return;
+    }
+
+    // JSON response (typical debug/proxy returning { downloadUrl })
+    if (contentType.includes('application/json')) {
+      const txt = await response.text().catch(() => '')
+      let obj;
+      try { obj = JSON.parse(txt || '{}') }
+      catch (e) {
+        infoBox.style.display = 'block';
+        infoBox.textContent = 'Invalid JSON response:\\n\\n' + txt;
+        status.innerText = 'Error: invalid json';
+        return;
+      }
+      // if backend returned downloadUrl, open it
+      if (obj && obj.downloadUrl) {
+        window.open(obj.downloadUrl, '_blank');
+        status.innerText = 'Status: download launched';
+        return;
+      }
+      // otherwise show returned JSON
+      infoBox.style.display = 'block';
+      infoBox.textContent = JSON.stringify(obj, null, 2);
+      status.innerText = 'Status: json response shown';
+      return;
+    }
+
+    // Plain text/html response -> show raw (likely an error or informational page)
+    if (contentType.startsWith('text/')) {
+      const txt = await response.text().catch(() => '[no body]');
+      infoBox.style.display = 'block';
+      infoBox.textContent = `HTTP ${response.status}\nContent-Type: ${contentType}\n\n` + txt;
+      status.innerText = 'Status: raw response shown';
+      return;
+    }
+
+    // Otherwise, treat response as binary (video/audio stream) and download it
+    const ab = await response.arrayBuffer();
+    const blob = new Blob([ab], { type: contentType || 'application/octet-stream' });
+    const blobUrl = URL.createObjectURL(blob);
+
+    // Create a filename from video title if available, otherwise use default
+    let filename = 'download';
     try {
-      const svc = serviceEl.value
-      fetch(WORKER_BASE + '/api/' + svc + '/info?url=' + encodeURIComponent(url), { headers: {'x-api-key': TEST_API_KEY} })
-      const text = await res.text()
-      const ct = (res.headers.get('content-type') || '').toLowerCase()
-      // show raw response for debugging
-      infoBox.style.display = 'block'
-      infoBox.textContent = `HTTP ${res.status}\\nContent-Type: ${ct}\\n\\n` + text
-      status.innerText = res.ok ? 'Status: info loaded (raw shown)' : 'Error: HTTP ' + res.status
-      // attempt to parse JSON if content-type suggests json
-      if (ct.includes('application/json')) {
-        try {
-          const j = JSON.parse(text)
-          if(j.title) titleEl.innerText = j.title
-          if(j.lengthSeconds) durationEl.innerText = 'Duration: ' + formatDuration(j.lengthSeconds)
-          if(j.thumbnails && j.thumbnails.length) thumb.src = j.thumbnails[j.thumbnails.length-1].url || ''
-          if(j.author) authorEl.innerText = 'Author: ' + j.author
-          metaBox.style.display = 'flex'
-        } catch(e){}
+      // If server included Content-Disposition header with filename, extract it
+      const disp = response.headers.get('content-disposition') || '';
+      const m = disp.match(/filename="?(.*?)"?($|;)/);
+      if (m && m[1]) filename = m[1];
+      else {
+        // fallback by format
+        if (format === 'mp3') filename = 'audio.mp3';
+        else filename = 'video.mp4';
       }
-    } catch(e){
-      status.innerText = 'Error: ' + e.message
-      infoBox.style.display = 'block'
-      infoBox.textContent = 'Fetch exception: ' + e.message
-    }
-  })
+    } catch (e) { filename = format === 'mp3' ? 'audio.mp3' : 'video.mp4' }
 
-  // Download: attempt to parse JSON first, otherwise show raw text
-  document.getElementById('downloadBtn').addEventListener('click', async ()=>{
-    const url = urlEl.value.trim(); if(!url) return alert('Enter a URL')
-    const svc = serviceEl.value; const quality = qualityEl.value; const format = formatEl.value
-    status.innerText = 'Status: requesting download...'; infoBox.style.display='none'
-    try{
-      const res = await fetch(WORKER_BASE + '/api/' + svc + '/download', { method:'POST', headers:{ 'Content-Type':'application/json', 'x-api-key': TEST_API_KEY }, body: JSON.stringify({ url, quality, format }) })
-      const text = await res.text()
-      const ct = (res.headers.get('content-type') || '').toLowerCase()
-      if(ct.includes('application/json')) {
-        const j = JSON.parse(text)
-        infoBox.style.display='block'; infoBox.textContent = JSON.stringify(j, null, 2)
-        if(j.downloadUrl){ window.open(j.downloadUrl, '_blank'); status.innerText = 'Status: download launched'; return }
-        status.innerText = 'Status: json response shown'
-      } else {
-        // Not JSON: show raw (likely HTML error or stream)
-        infoBox.style.display='block'; infoBox.textContent = `HTTP ${res.status}\\nContent-Type: ${ct}\\n\\n` + text
-        status.innerText = res.ok ? 'Status: raw response shown' : 'Error: HTTP ' + res.status
-      }
-    }catch(e){
-      status.innerText = 'Error: ' + e.message
-      infoBox.style.display='block'
-      infoBox.textContent = 'Exception: ' + e.message
-    }
-  })
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(blobUrl);
+
+    status.innerText = 'Status: download started';
+  } catch (err) {
+    // make sure we never reference `res` here — use `err`
+    status.innerText = 'Fetch exception: ' + (err && err.message ? err.message : String(err));
+    infoBox.style.display = 'block';
+    infoBox.textContent = 'Exception: ' + (err && err.stack ? err.stack : String(err));
+  }
+});
+
 
   function formatDuration(sec){
     sec = Number(sec)
