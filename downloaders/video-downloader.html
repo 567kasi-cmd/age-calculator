@@ -1,287 +1,95 @@
+<!-- paste the whole file below, replacing existing downloaders/video-downloader.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Video Tools — The Age Finder</title>
-  <meta name="description" content="YouTube + Instagram Reels downloader UI (frontend)." />
+  <title>Video Tools — The Age Finder (debug)</title>
+  <meta name="description" content="YouTube + Instagram Reels downloader UI (frontend) - debug mode." />
   <style>
-    :root{
-      --bg1:#667eea;
-      --bg2:#764ba2;
-      --card-bg: rgba(255,255,255,0.08);
-      --accent: #ffd700;
-      --muted: rgba(255,255,255,0.85);
-      --muted-2: rgba(255,255,255,0.72);
-      --input-bg: rgba(0,0,0,0.18);
-      --glass-border: rgba(255,255,255,0.12);
-      --pill-bg: rgba(255,255,255,0.03);
-    }
-
-    /* Page layout */
+    :root{--bg1:#667eea;--bg2:#764ba2;--card-bg: rgba(255,255,255,0.08);--accent:#ffd700;--muted:rgba(255,255,255,0.85);--input-bg:rgba(0,0,0,0.18)}
     html,body{height:100%;margin:0}
-    body{
-      font-family: Poppins, Inter, system-ui, Arial;
-      background: linear-gradient(135deg,var(--bg1),var(--bg2));
-      display:flex;
-      align-items:flex-start;
-      justify-content:center;
-      padding:36px 18px;
-      color:#fff;
-    }
-
-    .container{
-      width:100%;
-      max-width:1000px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-      border-radius:18px;
-      padding:28px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.28);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(8px);
-    }
-
-    /* Header */
-    header {
-      display:flex;
-      align-items:flex-start;
-      gap:18px;
-      margin-bottom:8px;
-    }
-    h1{
-      margin:0;
-      font-size:30px;
-      color:var(--accent);
-      text-shadow: 0 0 12px rgba(255,215,0,0.2);
-      font-weight:800;
-    }
-    p.lead{
-      margin:8px 0 0 0;
-      color:var(--muted-2);
-      font-size:14px;
-    }
-
-    /* Form area */
-    .form {
-      margin-top:18px;
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-
-    label{
-      display:block;
-      font-size:13px;
-      color:#ffeeb3;
-      margin-bottom:6px;
-      font-weight:600;
-    }
-
-   #videoUrl {
-      width:100%;
-      min-height:56px;
-      padding:14px 16px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.12);
-      background: var(--input-bg);
-      color: #fff;
-      font-size:16px;
-      outline:none;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
-      }
-
-
-    /* Dropdowns */
-    select {
-      width:100%;
-      padding:12px 14px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.10);
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.12));
-      color: #fff;
-      font-size:15px;
-      outline:none;
-      -webkit-appearance:none;
-      appearance:none;
-      background-image: linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.12) 50%), linear-gradient(135deg, rgba(255,255,255,0.12) 50%, transparent 50%);
-      background-position: calc(100% - 18px) 14px, calc(100% - 12px) 14px;
-      background-size: 8px 8px, 8px 8px;
-      background-repeat: no-repeat;
-    }
-
-    .row {
-      display:flex;
-      gap:18px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-
-    .controls{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:18px;
-      align-items:end;
-    }
-
-    /* Buttons */
-    .actions {
-      display:flex;
-      gap:12px;
-      align-items:center;
-    }
-    button.cta{
-      background: #fff;
-      color: var(--bg2);
-      border:none;
-      padding:12px 18px;
-      border-radius:12px;
-      font-weight:700;
-      cursor:pointer;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-    }
-    button.ghost{
-      background: transparent;
-      color: #fff;
-      border:1px solid rgba(255,255,255,0.12);
-      padding:10px 16px;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:600;
-    }
-
-    /* Meta preview */
-    .meta {
-      display:flex;
-      gap:14px;
-      align-items:center;
-      margin-top:6px;
-      padding:12px;
-      border-radius:12px;
-      background: rgba(0,0,0,0.10);
-      border:1px solid rgba(255,255,255,0.03);
-    }
-    .thumb{
-      width:160px;
-      height:90px;
-      object-fit:cover;
-      border-radius:8px;
-      background:#222;
-      flex-shrink:0;
-    }
-    .meta .info h3{
-      margin:0; font-size:18px; line-height:1.1;
-      color:#fff;
-    }
-    .meta .info p{ margin:6px 0 0 0; color:var(--muted-2); font-size:13px; }
-
-    /* Info block JSON */
-    pre#infoBox{ margin-top:14px; background: rgba(0,0,0,0.18); padding:12px; border-radius:10px; color:#fff; font-size:13px; }
-
-    /* Pills / extra links */
-    .link-pills{ margin-top:16px; display:flex; gap:12px; flex-wrap:wrap; align-items:center }
-    .link-pills a{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      text-decoration:none;
-      padding:8px 12px;
-      border-radius:999px;
-      background: var(--pill-bg);
-      color: #fff;
-      border:1px solid rgba(255,255,255,0.04);
-      font-weight:600;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    }
-    .link-pills a .emoji{ font-size:18px; }
-
-    /* footer */
-    footer{ margin-top:20px; color:rgba(255,255,255,0.75); font-size:13px; text-align:center; }
-
-    /* Responsive */
-    @media (max-width:820px){
-      .controls{ grid-template-columns: 1fr; }
-      .meta{ flex-direction:row; }
-      .thumb{ width:120px; height:72px; }
-    }
+    body{font-family:Poppins,Inter,system-ui,Arial;background:linear-gradient(135deg,var(--bg1),var(--bg2));display:flex;justify-content:center;padding:36px 18px;color:#fff}
+    .container{width:100%;max-width:1000px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:18px;padding:20px;border:1px solid rgba(255,255,255,0.12);backdrop-filter:blur(6px)}
+    h1{font-size:28px;color:var(--accent);margin:0 0 6px 0}
+    p.lead{margin:0 0 14px 0;color: rgba(255,255,255,0.8)}
+    label{display:block;font-size:13px;color:#ffeeb3;margin-bottom:6px;font-weight:600}
+    #videoUrl{width:100%;height:44px;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:var(--input-bg);color:#fff;font-size:15px;outline:none}
+    select{width:100%;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.12));color:#fff;border:1px solid rgba(255,255,255,0.08);font-size:15px}
+    .controls{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .actions{display:flex;gap:10px;margin-top:12px;align-items:center}
+    button.cta{background:#fff;color:var(--bg2);padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+    button.ghost{background:transparent;color:#fff;padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.1)}
+    .meta{display:flex;gap:12px;align-items:center;margin-top:12px;padding:12px;border-radius:10px;background:rgba(0,0,0,0.08)}
+    .thumb{width:140px;height:80px;object-fit:cover;border-radius:6px}
+    pre{margin-top:12px;background:rgba(0,0,0,0.18);padding:12px;border-radius:8px;overflow:auto;color:#fff}
+    .link-pills{margin-top:12px;display:flex;gap:10px}
+    .link-pills a{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.03);color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,0.04);font-weight:600}
+    footer{margin-top:14px;color:rgba(255,255,255,0.8);font-size:13px;text-align:center}
+    @media (max-width:820px){.controls{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <div class="container">
-    <header>
-      <div>
-        <h1>🎬 Video Tools — Downloader</h1>
-        <p class="lead">Paste a YouTube or Instagram Reel URL. Choose a resolution and output format (MP4 / video-only / MP3).</p>
-      </div>
-    </header>
+    <h1>🎬 Video Tools — Downloader (debug)</h1>
+    <p class="lead">Debug mode — shows raw server response to help fix JSON errors.</p>
 
-    <div class="form" role="main">
+    <div>
+      <label for="service">Service</label>
+      <select id="service"><option value="youtube">YouTube</option><option value="instagram">Instagram Reels</option></select>
+    </div>
+
+    <div style="margin-top:10px">
+      <label for="videoUrl">Video URL</label>
+      <input id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." />
+    </div>
+
+    <div class="controls" style="margin-top:10px">
       <div>
-        <label for="service">Service</label>
-        <select id="service" aria-label="Service">
-          <option value="youtube">YouTube</option>
-          <option value="instagram">Instagram Reels</option>
+        <label for="quality">Quality</label>
+        <select id="quality">
+          <option value="2160p">2160p (4K)</option>
+          <option value="1440p">1440p</option>
+          <option value="1080p">1080p</option>
+          <option value="720p">720p</option>
+          <option value="480p">480p</option>
+          <option value="360p">360p</option>
+          <option value="240p">240p</option>
+          <option value="highestaudio">Audio only (best)</option>
         </select>
       </div>
 
       <div>
-        <label for="videoUrl">Video URL</label>
-        <input id="videoUrl" type="text" placeholder="https://www.youtube.com/watch?v=..." />
+        <label for="format">Format</label>
+        <select id="format"><option value="mp4">MP4 (video + audio)</option><option value="video-only">MP4 (video only)</option><option value="mp3">MP3 (audio only)</option></select>
       </div>
-
-      <div class="controls">
-        <div>
-          <label for="quality">Quality</label>
-          <select id="quality" aria-label="Quality">
-            <!-- quality values are the labels we will send to backend -->
-            <option value="2160p">2160p (4K)</option>
-            <option value="1440p">1440p</option>
-            <option value="1080p">1080p</option>
-            <option value="720p">720p</option>
-            <option value="480p">480p</option>
-            <option value="360p">360p</option>
-            <option value="240p">240p</option>
-            <option value="highestaudio">Audio only (best)</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="format">Format</label>
-          <select id="format" aria-label="Format">
-            <option value="mp4">MP4 (video + audio)</option>
-            <option value="video-only">MP4 (video only)</option>
-            <option value="mp3">MP3 (audio only)</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="actions">
-          <button id="infoBtn" class="cta">Fetch Info</button>
-          <button id="downloadBtn" class="cta">Download</button>
-          <button id="resetBtn" class="ghost">Reset</button>
-        </div>
-        <div id="status" style="margin-left:auto;color:var(--muted-2)">Status: idle</div>
-      </div>
-
-      <div id="metaBox" style="display:none" class="meta" aria-live="polite">
-        <img id="thumb" class="thumb" src="" alt="thumbnail" />
-        <div class="info">
-          <h3 id="title">—</h3>
-          <p id="duration">Duration: —</p>
-          <p id="author">Author: —</p>
-        </div>
-      </div>
-
-      <pre id="infoBox" style="display:none"></pre>
-
-      <div class="link-pills" aria-hidden="false">
-        <a href="/bmi-calculator/"><span class="emoji">⚖️</span> BMI Calculator</a>
-        <a href="/date-difference/"><span class="emoji">📅</span> Date Difference</a>
-        <a href="/"><span class="emoji">🏠</span> Back to Home</a>
-      </div>
-
-      <footer>© 2025 Age Calculator | Use only with permission</footer>
     </div>
+
+    <div class="actions">
+      <button id="infoBtn" class="cta">Fetch Info</button>
+      <button id="downloadBtn" class="cta">Download</button>
+      <button id="resetBtn" class="ghost">Reset</button>
+      <div id="status" style="margin-left:auto;color:rgba(255,255,255,0.85)">Status: idle</div>
+    </div>
+
+    <div id="metaBox" class="meta" style="display:none">
+      <img id="thumb" class="thumb" src="" alt="thumbnail" />
+      <div class="info">
+        <h3 id="title">—</h3>
+        <p id="duration">Duration: —</p>
+        <p id="author">Author: —</p>
+      </div>
+    </div>
+
+    <pre id="infoBox" style="display:none"></pre>
+
+    <div class="link-pills">
+      <a href="/bmi-calculator/">⚖️ BMI Calculator</a>
+      <a href="/date-difference/">📅 Date Difference</a>
+      <a href="/">🏠 Back to Home</a>
+    </div>
+
+    <footer>© 2025 Age Calculator — Debug Mode (remove when fixed)</footer>
   </div>
 
 <script>
@@ -298,67 +106,71 @@
   const qualityEl = document.getElementById('quality')
   const formatEl = document.getElementById('format')
 
-  // TEMP TEST KEY - set to 'test-token' during debug and remove for production
+  // <-- IMPORTANT: debug token (temporary) -->
   const TEST_API_KEY = 'test-token'
 
-  document.getElementById('resetBtn').addEventListener('click', ()=>{
-    urlEl.value = ''
-    infoBox.style.display = 'none'
-    metaBox.style.display = 'none'
-    status.innerText = 'Status: idle'
+  document.getElementById('resetBtn').addEventListener('click', ()=> {
+    urlEl.value = ''; infoBox.style.display='none'; metaBox.style.display='none'; status.innerText = 'Status: idle'
   })
 
+  // DEBUG-SAFE: show raw response (text) rather than failing on res.json()
   document.getElementById('infoBtn').addEventListener('click', async ()=>{
-    const url = urlEl.value.trim()
-    if(!url) return alert('Enter a URL')
-    status.innerText = 'Status: fetching info...'
-    infoBox.style.display = 'none'
+    const url = urlEl.value.trim(); if(!url) return alert('Enter a URL')
+    status.innerText = 'Status: fetching info...'; infoBox.style.display='none'; metaBox.style.display='none'
     try {
       const svc = serviceEl.value
       const res = await fetch('/api/' + svc + '/info?url=' + encodeURIComponent(url), { headers: {'x-api-key': TEST_API_KEY} })
-      if(!res.ok) throw new Error(await res.text())
-      const j = await res.json()
-      infoBox.textContent = JSON.stringify(j, null, 2)
+      const text = await res.text()
+      const ct = (res.headers.get('content-type') || '').toLowerCase()
+      // show raw response for debugging
       infoBox.style.display = 'block'
-      // fill meta (robust handling)
-      const thumbs = j.thumbnails || (j.thumbnails? j.thumbnails : [])
-      if(thumbs && thumbs.length) thumb.src = thumbs[thumbs.length-1].url || thumbs[thumbs.length-1].url
-      titleEl.innerText = j.title || j.videoTitle || '—'
-      durationEl.innerText = 'Duration: ' + (j.lengthSeconds ? formatDuration(j.lengthSeconds) : (j.duration || '—'))
-      authorEl.innerText = 'Author: ' + (j.author || j.channelName || '—')
-      metaBox.style.display = 'flex'
-      status.innerText = 'Status: info loaded'
+      infoBox.textContent = `HTTP ${res.status}\\nContent-Type: ${ct}\\n\\n` + text
+      status.innerText = res.ok ? 'Status: info loaded (raw shown)' : 'Error: HTTP ' + res.status
+      // attempt to parse JSON if content-type suggests json
+      if (ct.includes('application/json')) {
+        try {
+          const j = JSON.parse(text)
+          if(j.title) titleEl.innerText = j.title
+          if(j.lengthSeconds) durationEl.innerText = 'Duration: ' + formatDuration(j.lengthSeconds)
+          if(j.thumbnails && j.thumbnails.length) thumb.src = j.thumbnails[j.thumbnails.length-1].url || ''
+          if(j.author) authorEl.innerText = 'Author: ' + j.author
+          metaBox.style.display = 'flex'
+        } catch(e){}
+      }
     } catch(e){
       status.innerText = 'Error: ' + e.message
+      infoBox.style.display = 'block'
+      infoBox.textContent = 'Fetch exception: ' + e.message
     }
   })
 
+  // Download: attempt to parse JSON first, otherwise show raw text
   document.getElementById('downloadBtn').addEventListener('click', async ()=>{
-    const url = urlEl.value.trim()
-    if(!url) return alert('Enter a URL')
-    const svc = serviceEl.value
-    const quality = qualityEl.value // resolution label like '1080p' or '2160p' or 'highestaudio'
-    const format = formatEl.value
-    status.innerText = 'Status: requesting download...'
+    const url = urlEl.value.trim(); if(!url) return alert('Enter a URL')
+    const svc = serviceEl.value; const quality = qualityEl.value; const format = formatEl.value
+    status.innerText = 'Status: requesting download...'; infoBox.style.display='none'
     try{
       const res = await fetch('/api/' + svc + '/download', {
         method:'POST',
         headers:{ 'Content-Type':'application/json', 'x-api-key': TEST_API_KEY },
         body: JSON.stringify({ url, quality, format })
       })
-      if(!res.ok) throw new Error(await res.text())
-      // server may return { downloadUrl } or stream the file directly
-      const j = await res.json()
-      if(j.downloadUrl){
-        window.open(j.downloadUrl, '_blank')
-        status.innerText = 'Status: download launched'
-        return
+      const text = await res.text()
+      const ct = (res.headers.get('content-type') || '').toLowerCase()
+      if(ct.includes('application/json')) {
+        const j = JSON.parse(text)
+        infoBox.style.display='block'; infoBox.textContent = JSON.stringify(j, null, 2)
+        if(j.downloadUrl){ window.open(j.downloadUrl, '_blank'); status.innerText = 'Status: download launched'; return }
+        status.innerText = 'Status: json response shown'
+      } else {
+        // Not JSON: show raw (likely HTML error or stream)
+        infoBox.style.display='block'; infoBox.textContent = `HTTP ${res.status}\\nContent-Type: ${ct}\\n\\n` + text
+        status.innerText = res.ok ? 'Status: raw response shown' : 'Error: HTTP ' + res.status
       }
-      infoBox.textContent = JSON.stringify(j, null, 2)
-      infoBox.style.display = 'block'
-      status.innerText = 'Status: response received'
     }catch(e){
-      status.innerText = 'Error: '+e.message
+      status.innerText = 'Error: ' + e.message
+      infoBox.style.display='block'
+      infoBox.textContent = 'Exception: ' + e.message
     }
   })
 
@@ -366,7 +178,7 @@
     sec = Number(sec)
     if(isNaN(sec)) return sec
     const h = Math.floor(sec/3600); const m = Math.floor((sec%3600)/60); const s = sec%60
-    return (h? h + 'h ':'') + (m? m + 'm ':'') + s + 's'
+    return (h? h+'h ':'') + (m? m+'m ':'') + s + 's'
   }
 </script>
 </body>
