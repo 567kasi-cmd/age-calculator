@@ -106,8 +106,10 @@
   const qualityEl = document.getElementById('quality')
   const formatEl = document.getElementById('format')
 
-  // <-- IMPORTANT: debug token (temporary) -->
-  const TEST_API_KEY = 'test-token'
+  // <-- REPLACE existing TEST_API_KEY line with these two lines -->
+const WORKER_BASE = 'https://floral-sunset-9ef5.567kasi.workers.dev'
+const TEST_API_KEY = 'test-token'  // debug key (temporary). Keep secret in production.
+
 
   document.getElementById('resetBtn').addEventListener('click', ()=> {
     urlEl.value = ''; infoBox.style.display='none'; metaBox.style.display='none'; status.innerText = 'Status: idle'
@@ -119,7 +121,7 @@
     status.innerText = 'Status: fetching info...'; infoBox.style.display='none'; metaBox.style.display='none'
     try {
       const svc = serviceEl.value
-      const res = await fetch('/api/' + svc + '/info?url=' + encodeURIComponent(url), { headers: {'x-api-key': TEST_API_KEY} })
+      fetch(WORKER_BASE + '/api/' + svc + '/info?url=' + encodeURIComponent(url), { headers: {'x-api-key': TEST_API_KEY} })
       const text = await res.text()
       const ct = (res.headers.get('content-type') || '').toLowerCase()
       // show raw response for debugging
@@ -150,11 +152,7 @@
     const svc = serviceEl.value; const quality = qualityEl.value; const format = formatEl.value
     status.innerText = 'Status: requesting download...'; infoBox.style.display='none'
     try{
-      const res = await fetch('/api/' + svc + '/download', {
-        method:'POST',
-        headers:{ 'Content-Type':'application/json', 'x-api-key': TEST_API_KEY },
-        body: JSON.stringify({ url, quality, format })
-      })
+      const res = await fetch(WORKER_BASE + '/api/' + svc + '/download', { method:'POST', headers:{ 'Content-Type':'application/json', 'x-api-key': TEST_API_KEY }, body: JSON.stringify({ url, quality, format }) })
       const text = await res.text()
       const ct = (res.headers.get('content-type') || '').toLowerCase()
       if(ct.includes('application/json')) {
