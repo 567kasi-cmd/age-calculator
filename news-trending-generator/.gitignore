@@ -1,1 +1,7 @@
-nothing
+/node_modules
+/.venv
+/.cloudflare
+/dist
+/.parcel-cache
+/.cache
+.env
