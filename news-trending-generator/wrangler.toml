@@ -1,10 +1,11 @@
 name = "news-trending-generator"
 compatibility_date = "2025-11-21"
+type = "javascript"
 
-# For Workers (if you publish them individually)
-[env.production]
-# nothing required here; use `wrangler publish workers/trending-worker.js --name trending-worker` etc.
+# Account-level config
+account_id = "ad3e5dc932de1d6f00502baa1debbec1"
 
-# If using Pages + Functions workflow, you'll configure Cloudflare Pages via dashboard and
-# deploy the frontend directly from GitHub (recommended).
-
+# Default environment (optional). You can run `wrangler publish --env production` if you configure env blocks.
+[build]
+command = "npm run build"
+upload_format = "service-worker"
