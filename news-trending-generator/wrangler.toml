@@ -1,1 +1,10 @@
+name = "news-trending-generator"
+compatibility_date = "2025-11-21"
+
+# For Workers (if you publish them individually)
+[env.production]
+# nothing required here; use `wrangler publish workers/trending-worker.js --name trending-worker` etc.
+
+# If using Pages + Functions workflow, you'll configure Cloudflare Pages via dashboard and
+# deploy the frontend directly from GitHub (recommended).
 
