@@ -17,106 +17,58 @@
   <meta property="og:type" content="website" />
   <meta property="og:image" content="/agecalc-preview.png" />
   
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      text-align: center;
-    }
-
-    header h1 {
-      margin-bottom: 20px;
-    }
-
-    form {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      padding: 30px;
-      border-radius: 18px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-      width: 100%;
-      max-width: 400px;
-    }
-
-    label {
-      display: block;
-      margin: 12px 0;
-      text-align: left;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      outline: none;
-      font-size: 16px;
-    }
-
-    button {
-      margin-top: 20px;
-      background: #fff;
-      color: #764ba2;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-
-    button:hover {
-      background: #764ba2;
-      color: #fff;
-    }
-
-    #result {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    footer {
-      margin-top: 20px;
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    footer a {
-      color: #ffd700;
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
     <h1>🏅 Gold Loan EMI Calculator</h1>
+    <p>Calculate your gold loan EMI instantly with our free and accurate online tool.</p>
   </header>
 
   <main>
-    <form id="emiForm">
+    <form id="emiForm" class="emi-form">
       <label>Loan Amount (₹): <input type="number" id="amount" required></label>
       <label>Interest Rate (% per annum): <input type="number" id="rate" step="0.01" required></label>
       <label>Loan Tenure (months): <input type="number" id="months" required></label>
       <button type="submit">Calculate EMI</button>
     </form>
 
-    <h2 id="result"></h2>
+    <h2 id="result" class="result"></h2>
+
+    <section class="info-section">
+      <h2>What is a Gold Loan EMI?</h2>
+      <p>A Gold Loan EMI is the fixed monthly payment you make to repay your gold loan. It includes both principal and interest.</p>
+
+      <h2>How to Use This Gold Loan EMI Calculator?</h2>
+      <p>Enter your loan amount, interest rate, and tenure to calculate your EMI instantly.</p>
+
+      <h2>Benefits of Using This Calculator</h2>
+      <ul>
+        <li>Instant and accurate EMI calculation</li>
+        <li>Helps you plan your gold loan</li>
+        <li>Compare different loan options</li>
+      </ul>
+
+      <h2>Tips Before Taking a Gold Loan</h2>
+      <ul>
+        <li>Check gold prices and LTV ratio</li>
+        <li>Compare interest rates</li>
+        <li>Choose suitable tenure</li>
+      </ul>
+      <p>
+You can also try our <a href="/emi-calculator/">EMI calculator</a> or
+<a href="/bmi/">BMI calculator</a> for other useful tools.
+</p>
+    </section>
   </main>
 
-  <footer>
+  <footer class="footer">
+    <p>Explore More Tools:</p>
+    <a href="/">Age Calculator</a> |
+    <a href="/bmi/">BMI Calculator</a> |
+    <a href="/date-difference/">Date Difference</a> |
+    <a href="/emi-calculator/">EMI Calculator</a>
+    <br><br>
     <a href="/emi-calculator/">← Back to EMI Calculators</a>
   </footer>
 
