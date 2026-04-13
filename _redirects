@@ -1,0 +1,11 @@
+# Redirect all .html files to clean URLs with 301 permanent redirect
+/emi-calculator/home-loan.html             /emi-calculator/home-loan             301
+/emi-calculator/personal-loan.html         /emi-calculator/personal-loan         301
+/emi-calculator/car-loan.html              /emi-calculator/car-loan              301
+/emi-calculator/business-loan.html         /emi-calculator/business-loan         301
+/emi-calculator/education-loan.html        /emi-calculator/education-loan        301
+/emi-calculator/credit-card.html           /emi-calculator/credit-card           301
+/emi-calculator/gold-loan.html             /emi-calculator/gold-loan             301
+/downloaders/video-downloader.html         /downloaders/video-downloader         301
+/agecalculator.html                        /age-calculator                       301
+
