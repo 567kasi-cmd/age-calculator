@@ -154,6 +154,20 @@ The UI now shows friendly in-app messages for:
 - Cloudflare Pages Functions are best-effort for large media workloads
 - Final media availability still depends on the source and extractor compatibility
 
+## Cloudflare Secret Required
+
+The extractor upstream currently requires authentication.
+Set this secret in **Cloudflare Pages → Settings → Environment variables / Secrets**:
+
+```text
+COBALT_API_AUTH=Bearer <your-cobalt-jwt>
+```
+
+If your secret value already includes the `Bearer ` prefix, keep it as-is.
+If you only have the raw token, this project will automatically prepend `Bearer ` for you.
+
+After adding the secret, **redeploy** the project.
+
 ## Deployment
 
 Cloudflare Pages will automatically pick up the `functions/` directory and deploy these handlers as Pages Functions.

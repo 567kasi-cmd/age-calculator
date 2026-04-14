@@ -171,9 +171,18 @@ function mapQuality(quality, platform) {
   return map[quality] || '720';
 }
 
+function buildExtractorAuthHeader(env) {
+  const rawValue = env.COBALT_API_AUTH || env.COBALT_API_TOKEN || env.COBALT_API_BEARER || '';
+  if (!rawValue) return null;
+  return /\s/.test(rawValue) ? rawValue : `Bearer ${rawValue}`;
+}
+
 function mapExtractorError(errorCode) {
   const normalized = (errorCode || '').toLowerCase();
 
+  if (normalized.includes('auth.jwt.missing') || normalized.includes('auth') || normalized.includes('jwt')) {
+    return ['Downloader service is not configured yet. Add the `COBALT_API_AUTH` secret in Cloudflare Pages settings and redeploy.', 503];
+  }
   if (normalized.includes('rate')) return ['The downloader is temporarily rate-limited. Please wait a minute and try again.', 429];
   if (normalized.includes('private')) return ['This media is private or unavailable.', 403];
   if (normalized.includes('youtube')) return ['This YouTube video could not be processed right now.', 502];
@@ -186,6 +195,7 @@ export async function requestExtractor(url, options = {}, env = {}) {
   const platform = detectPlatform(url);
   const endpoint = env.COBALT_API_BASE || DEFAULT_EXTRACTOR_URL;
   const metadata = await fetchMetadata(url);
+  const authHeader = buildExtractorAuthHeader(env);
 
   const payload = {
     url,
@@ -197,13 +207,19 @@ export async function requestExtractor(url, options = {}, env = {}) {
     youtubeVideoCodec: 'h264'
   };
 
+  const headers = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'User-Agent': 'TheAgeFinder-Downloader/1.0'
+  };
+
+  if (authHeader) {
+    headers.Authorization = authHeader;
+  }
+
   const response = await withTimeout(signal => fetch(endpoint, {
     method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'User-Agent': 'TheAgeFinder-Downloader/1.0'
-    },
+    headers,
     body: JSON.stringify(payload),
     signal
   }), 25000);
@@ -270,4 +286,3 @@ export function handleRouteError(error) {
 
   return json({ error: 'Unexpected server error. Please try again later.', code: 'internal_error' }, 500);
 }
-
