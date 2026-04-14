@@ -361,9 +361,14 @@
     const progressFill = document.getElementById('progressFill');
     const progressText = document.getElementById('progressText');
 
-    // Set this in localStorage once after Railway deploy:
-    // localStorage.setItem('VIDEO_BACKEND_BASE_URL', 'https://your-service.up.railway.app')
-    const VIDEO_BACKEND_BASE_URL = (localStorage.getItem('VIDEO_BACKEND_BASE_URL') || '').replace(/\/$/, '');
+    // Default deployed backend (Render)
+    const DEFAULT_VIDEO_BACKEND_BASE_URL = 'https://video-downloader-backend-mt9k.onrender.com';
+
+    // Optional override for testing:
+    // localStorage.setItem('VIDEO_BACKEND_BASE_URL', 'https://your-other-backend.example.com')
+    const VIDEO_BACKEND_BASE_URL = (
+      localStorage.getItem('VIDEO_BACKEND_BASE_URL') || DEFAULT_VIDEO_BACKEND_BASE_URL
+    ).replace(/\/$/, '');
 
     function apiUrl(path) {
       if (!VIDEO_BACKEND_BASE_URL) {
