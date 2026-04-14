@@ -11,6 +11,8 @@ document.getElementById("emiForm")?.addEventListener("submit", function(e) {
   }
 
   let monthlyRate = R / 12 / 100;
+  let emi = (P * monthlyRate * Math.pow(1 + monthlyRate, N)) / (Math.pow(1 + monthlyRate, N) - 1);
+
   document.getElementById("result").innerText = `Your Monthly EMI: ₹${emi.toFixed(2)}`;
 
 });
