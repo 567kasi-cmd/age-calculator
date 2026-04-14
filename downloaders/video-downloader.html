@@ -424,30 +424,66 @@
     }, 600));
 
     // ──────────────────────────────────────────────────────
-    // Build service redirect URL for actual downloading
-    // Since this is a static site (Cloudflare Pages),
-    // we redirect to proven free download services.
+    // cobalt.tools API — open source, CORS-enabled, free
+    // Returns a direct download URL right in the browser
     // ──────────────────────────────────────────────────────
-    function buildDownloadServiceUrl(url, type) {
+    async function tryDirectDownload(url, type, quality) {
+      const qualityMap = { '144p': '144', '360p': '360', '720p': '720', '1080p': '1080' };
+      const body = {
+        url: url,
+        downloadMode: type === 'audio' ? 'audio' : 'auto',
+        videoQuality: qualityMap[quality] || '720',
+        audioFormat: type === 'audio' ? 'mp3' : 'best',
+        filenameStyle: 'pretty'
+      };
+
+      const res = await fetch('https://api.cobalt.tools/', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
+      const data = await res.json();
+
+      // status "tunnel" or "redirect" = direct download URL available
+      if ((data.status === 'tunnel' || data.status === 'redirect') && data.url) {
+        return data.url;
+      }
+
+      throw new Error(data.error?.code || 'Could not get download URL');
+    }
+
+    // ──────────────────────────────────────────────────────
+    // Fallback service links — shown if cobalt fails
+    // ──────────────────────────────────────────────────────
+    function getFallbackLinks(url, type) {
       const encoded = encodeURIComponent(url);
+      const videoId = extractYouTubeId(url);
 
       if (isYouTubeUrl(url)) {
-        const videoId = extractYouTubeId(url);
-        if (type === 'audio') {
-          // y2mate MP3 downloader
-          return `https://www.y2mate.com/youtube-mp3/${videoId || ''}`;
-        } else {
-          // ssyoutube — just change "youtube" → "ssyoutube" in the URL
-          return url.replace(/(youtube\.com|youtu\.be)/, 'ssyoutube.com');
-        }
+        return type === 'audio'
+          ? [
+              { name: '🎵 cobalt.tools (MP3)', url: 'https://cobalt.tools/', note: 'Paste URL → select Audio' },
+              { name: '🎵 YTMP3.cc', url: `https://ytmp3.cc/` },
+              { name: '🎵 SaveFrom', url: `https://en.savefrom.net/#url=${encoded}` }
+            ]
+          : [
+              { name: '📹 cobalt.tools', url: 'https://cobalt.tools/', note: 'Paste URL & download' },
+              { name: '📹 SaveFrom.net', url: `https://en.savefrom.net/#url=${encoded}` },
+              { name: '📹 9xBuddy', url: `https://9xbuddy.app/process?url=${encoded}` }
+            ];
       }
 
       if (isInstagramUrl(url)) {
-        // instasaved redirects with URL param
-        return `https://snapinsta.app/?url=${encoded}`;
+        return [
+          { name: '📸 cobalt.tools', url: 'https://cobalt.tools/', note: 'Paste URL & download' },
+          { name: '📸 SnapInsta', url: 'https://snapinsta.app/' },
+          { name: '📸 SaveIG', url: 'https://saveig.app/' }
+        ];
       }
 
-      return null;
+      return [];
     }
 
     // ──────────────────────────────────────────────────────
@@ -456,15 +492,9 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const url = videoUrlInput.value.trim();
-
       if (!url) { showError('Please enter a URL.'); return; }
-      if (!isValidUrl(url)) {
-        showError('❌ Invalid URL.<br>Accepted formats:<br>• https://www.youtube.com/watch?v=...<br>• https://youtu.be/...<br>• https://www.youtube.com/shorts/...<br>• https://www.instagram.com/reel/...');
-        return;
-      }
-
-      const quality = qualitySelect.value;
-      await runDownload(url, 'video', quality);
+      if (!isValidUrl(url)) { showInvalidUrlError(); return; }
+      await runDownload(url, 'video', qualitySelect.value);
     });
 
     // ──────────────────────────────────────────────────────
@@ -472,49 +502,77 @@
     // ──────────────────────────────────────────────────────
     downloadAudioBtn.addEventListener('click', async () => {
       const url = videoUrlInput.value.trim();
-
       if (!url) { showError('Please enter a URL.'); return; }
-      if (!isValidUrl(url)) {
-        showError('❌ Invalid URL.<br>Accepted formats:<br>• https://www.youtube.com/watch?v=...<br>• https://youtu.be/...<br>• https://www.youtube.com/shorts/...<br>• https://www.instagram.com/reel/...');
-        return;
-      }
-
-      await runDownload(url, 'audio');
+      if (!isValidUrl(url)) { showInvalidUrlError(); return; }
+      await runDownload(url, 'audio', '360p');
     });
 
-    async function runDownload(url, type, quality = '360p') {
+    async function runDownload(url, type, quality) {
       showLoading();
+      showProgress('Contacting download service...');
 
-      // Animate progress bar to show activity
+      try {
+        // ── Step 1: Try cobalt.tools for a direct download link ──
+        animateProgress(0, 70, 800);
+        const directUrl = await tryDirectDownload(url, type, quality);
+
+        animateProgress(70, 100, 300);
+        await new Promise(r => setTimeout(r, 350));
+        hideProgress();
+        hideLoading();
+
+        // Trigger direct download
+        const a = document.createElement('a');
+        a.href = directUrl;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        showSuccess(`✅ Your download has started!<br><small>If it didn't start, <a href="${directUrl}" target="_blank" rel="noopener" style="color:#ffd700;">click here</a>.</small>`);
+
+      } catch (err) {
+        // ── Step 2: Cobalt failed — show fallback service links ──
+        hideProgress();
+        hideLoading();
+
+        const links = getFallbackLinks(url, type);
+        let html = `⚠️ Direct download unavailable. Use one of these free services:<br><br>`;
+        html += `<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:8px;">`;
+        links.forEach(link => {
+          html += `<a href="${link.url}" target="_blank" rel="noopener"
+            style="background:#007bff;color:white;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-block;">
+            ${link.name}${link.note ? `<br><small style="font-weight:normal;font-size:11px;">${link.note}</small>` : ''}
+          </a>`;
+        });
+        html += `</div>`;
+        showError(html);
+      }
+    }
+
+    // ── Progress helpers ──
+    function showProgress(msg) {
       progressContainer.style.display = 'block';
-      let progress = 0;
-      const progressInterval = setInterval(() => {
-        progress = Math.min(progress + 5, 85); // stop at 85% until redirect fires
-        progressFill.style.width = `${progress}%`;
-        progressText.textContent = `Preparing download... ${progress}%`;
-      }, 100);
+      progressFill.style.width = '0%';
+      progressText.textContent = msg;
+    }
 
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      clearInterval(progressInterval);
-      progressFill.style.width = '100%';
-      progressText.textContent = 'Redirecting to download service...';
+    function animateProgress(from, to, duration) {
+      const steps = 20;
+      const stepTime = duration / steps;
+      const increment = (to - from) / steps;
+      let current = from;
+      const interval = setInterval(() => {
+        current = Math.min(current + increment, to);
+        progressFill.style.width = `${current}%`;
+        if (current >= to) clearInterval(interval);
+      }, stepTime);
+    }
 
-      const serviceUrl = buildDownloadServiceUrl(url, type);
-
-      hideLoading();
+    function hideProgress() {
       progressContainer.style.display = 'none';
       progressFill.style.width = '0%';
-
-      if (serviceUrl) {
-        showSuccess(
-          `✅ Opening download service in a new tab.<br>
-           <small>If the tab didn't open, <a href="${serviceUrl}" target="_blank" rel="noopener" style="color:#ffd700;">click here</a>.</small>`
-        );
-        // Short delay so user sees the success message, then open
-        setTimeout(() => window.open(serviceUrl, '_blank', 'noopener'), 400);
-      } else {
-        showError('Could not build download link. Please try again.');
-      }
     }
 
     // ──────────────────────────────────────────────────────
@@ -543,6 +601,14 @@
       result.className = 'result error';
       result.innerHTML = message;
       result.style.display = 'block';
+    }
+
+    function showInvalidUrlError() {
+      showError(`❌ Invalid URL. Accepted formats:<br>
+        • https://www.youtube.com/watch?v=...<br>
+        • https://youtu.be/...<br>
+        • https://www.youtube.com/shorts/...<br>
+        • https://www.instagram.com/reel/...`);
     }
 
     function debounce(func, wait) {
