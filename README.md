@@ -50,14 +50,23 @@ A comprehensive web application featuring an age calculator with additional tool
    - **macOS**: `brew install ffmpeg`
    - **Linux**: `sudo apt install ffmpeg`
 
-4. **Start the backend server**:
+4. **Test your setup** (optional):
+   ```bash
+   # On Linux/Mac:
+   chmod +x test-setup.sh && ./test-setup.sh
+   
+   # On Windows:
+   test-setup.bat
+   ```
+
+5. **Start the backend server**:
    ```bash
    npm start
    # or for development with auto-reload:
    npm run dev
    ```
 
-5. **Open the frontend**:
+6. **Open the frontend**:
    - Open `index.html` in your browser, or
    - Serve the static files using a local server
 
