@@ -344,97 +344,182 @@
     const progressFill = document.getElementById('progressFill');
     const progressText = document.getElementById('progressText');
 
-    // For demo purposes - in production, this would connect to your backend API
-    const API_BASE = 'http://localhost:3000/api'; // Change this to your backend URL
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      await downloadVideo();
-    });
-
-    downloadAudioBtn.addEventListener('click', async () => {
-      await downloadAudio();
-    });
-
-    async function downloadVideo() {
-      const url = videoUrlInput.value.trim();
-      const quality = qualitySelect.value;
-
-      if (!url) {
-        showError('Please enter a valid URL');
-        return;
-      }
-
-      if (!isValidUrl(url)) {
-        showError('Please enter a valid YouTube or Instagram URL');
-        return;
-      }
-
-      showLoading();
-
-      try {
-        // In production, this would call your backend API
-        // For demo, we'll simulate the process
-        await simulateDownload('video', quality);
-
-        // Simulate successful download
-        showSuccess('Video download started! Check your downloads folder.');
-
-      } catch (error) {
-        showError('Failed to download video. Please try again.');
-      } finally {
-        hideLoading();
-      }
+    // ──────────────────────────────────────────────────────
+    // URL Validation — accepts all common YouTube / Instagram formats
+    // ──────────────────────────────────────────────────────
+    function isYouTubeUrl(url) {
+      return /^(https?:\/\/)?(www\.|m\.|music\.)?(youtube\.com|youtu\.be)\/.+/.test(url);
     }
 
-    async function downloadAudio() {
-      const url = videoUrlInput.value.trim();
-
-      if (!url) {
-        showError('Please enter a valid URL');
-        return;
-      }
-
-      if (!isValidUrl(url)) {
-        showError('Please enter a valid YouTube or Instagram URL');
-        return;
-      }
-
-      showLoading();
-
-      try {
-        // In production, this would call your backend API
-        await simulateDownload('audio');
-
-        showSuccess('MP3 extraction started! Check your downloads folder.');
-
-      } catch (error) {
-        showError('Failed to extract audio. Please try again.');
-      } finally {
-        hideLoading();
-      }
+    function isInstagramUrl(url) {
+      return /^(https?:\/\/)?(www\.)?instagram\.com\/(p|reel|reels|tv)\/.+/.test(url);
     }
 
     function isValidUrl(url) {
-      const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
-      const instagramRegex = /(?:https?:\/\/)?(?:www\.)?instagram\.com\/reel\/([A-Za-z0-9_-]+)/;
-
-      return youtubeRegex.test(url) || instagramRegex.test(url);
+      return isYouTubeUrl(url) || isInstagramUrl(url);
     }
 
-    async function simulateDownload(type, quality = '360p') {
-      // Simulate API call and progress
-      progressContainer.style.display = 'block';
+    // ──────────────────────────────────────────────────────
+    // Extract YouTube Video ID from all URL formats
+    // Handles: watch?v=, youtu.be/, /shorts/, /embed/, /v/
+    // ──────────────────────────────────────────────────────
+    function extractYouTubeId(url) {
+      const patterns = [
+        /[?&]v=([^&#]{11})/,           // watch?v=ID
+        /youtu\.be\/([^?&#]{11})/,      // youtu.be/ID
+        /\/shorts\/([^?&#]{11})/,       // /shorts/ID
+        /\/embed\/([^?&#]{11})/,        // /embed/ID
+        /\/v\/([^?&#]{11})/             // /v/ID
+      ];
+      for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match) return match[1];
+      }
+      return null;
+    }
 
-      for (let i = 0; i <= 100; i += 10) {
-        progressFill.style.width = `${i}%`;
-        progressText.textContent = `Downloading... ${i}%`;
-        await new Promise(resolve => setTimeout(resolve, 200));
+    // ──────────────────────────────────────────────────────
+    // Fetch YouTube title + thumbnail via free oEmbed API
+    // No API key needed, works from browser (CORS-safe)
+    // ──────────────────────────────────────────────────────
+    async function fetchYouTubePreview(url) {
+      try {
+        const oEmbedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`;
+        const res = await fetch(oEmbedUrl);
+        if (!res.ok) throw new Error('oEmbed failed');
+        const data = await res.json();
+        return { title: data.title, thumb: data.thumbnail_url };
+      } catch {
+        // Fallback: build thumbnail from video ID
+        const videoId = extractYouTubeId(url);
+        return videoId
+          ? { title: 'YouTube Video', thumb: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` }
+          : null;
+      }
+    }
+
+    // ──────────────────────────────────────────────────────
+    // Show video preview when a valid URL is typed
+    // ──────────────────────────────────────────────────────
+    videoUrlInput.addEventListener('input', debounce(async () => {
+      const url = videoUrlInput.value.trim();
+      if (!isValidUrl(url)) {
+        videoPreview.style.display = 'none';
+        return;
       }
 
-      progressContainer.style.display = 'none';
+      if (isYouTubeUrl(url)) {
+        const preview = await fetchYouTubePreview(url);
+        if (preview) {
+          thumbnail.src = preview.thumb;
+          videoTitle.textContent = preview.title;
+          videoPreview.style.display = 'block';
+        }
+      } else if (isInstagramUrl(url)) {
+        // Instagram blocks oEmbed from browser – show a placeholder
+        thumbnail.src = 'https://via.placeholder.com/300x168/e1306c/ffffff?text=Instagram+Reel';
+        videoTitle.textContent = 'Instagram Reel';
+        videoPreview.style.display = 'block';
+      }
+    }, 600));
+
+    // ──────────────────────────────────────────────────────
+    // Build service redirect URL for actual downloading
+    // Since this is a static site (Cloudflare Pages),
+    // we redirect to proven free download services.
+    // ──────────────────────────────────────────────────────
+    function buildDownloadServiceUrl(url, type) {
+      const encoded = encodeURIComponent(url);
+
+      if (isYouTubeUrl(url)) {
+        const videoId = extractYouTubeId(url);
+        if (type === 'audio') {
+          // y2mate MP3 downloader
+          return `https://www.y2mate.com/youtube-mp3/${videoId || ''}`;
+        } else {
+          // ssyoutube — just change "youtube" → "ssyoutube" in the URL
+          return url.replace(/(youtube\.com|youtu\.be)/, 'ssyoutube.com');
+        }
+      }
+
+      if (isInstagramUrl(url)) {
+        // instasaved redirects with URL param
+        return `https://snapinsta.app/?url=${encoded}`;
+      }
+
+      return null;
     }
 
+    // ──────────────────────────────────────────────────────
+    // Download Video
+    // ──────────────────────────────────────────────────────
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = videoUrlInput.value.trim();
+
+      if (!url) { showError('Please enter a URL.'); return; }
+      if (!isValidUrl(url)) {
+        showError('❌ Invalid URL.<br>Accepted formats:<br>• https://www.youtube.com/watch?v=...<br>• https://youtu.be/...<br>• https://www.youtube.com/shorts/...<br>• https://www.instagram.com/reel/...');
+        return;
+      }
+
+      const quality = qualitySelect.value;
+      await runDownload(url, 'video', quality);
+    });
+
+    // ──────────────────────────────────────────────────────
+    // Download Audio (MP3)
+    // ──────────────────────────────────────────────────────
+    downloadAudioBtn.addEventListener('click', async () => {
+      const url = videoUrlInput.value.trim();
+
+      if (!url) { showError('Please enter a URL.'); return; }
+      if (!isValidUrl(url)) {
+        showError('❌ Invalid URL.<br>Accepted formats:<br>• https://www.youtube.com/watch?v=...<br>• https://youtu.be/...<br>• https://www.youtube.com/shorts/...<br>• https://www.instagram.com/reel/...');
+        return;
+      }
+
+      await runDownload(url, 'audio');
+    });
+
+    async function runDownload(url, type, quality = '360p') {
+      showLoading();
+
+      // Animate progress bar to show activity
+      progressContainer.style.display = 'block';
+      let progress = 0;
+      const progressInterval = setInterval(() => {
+        progress = Math.min(progress + 5, 85); // stop at 85% until redirect fires
+        progressFill.style.width = `${progress}%`;
+        progressText.textContent = `Preparing download... ${progress}%`;
+      }, 100);
+
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      clearInterval(progressInterval);
+      progressFill.style.width = '100%';
+      progressText.textContent = 'Redirecting to download service...';
+
+      const serviceUrl = buildDownloadServiceUrl(url, type);
+
+      hideLoading();
+      progressContainer.style.display = 'none';
+      progressFill.style.width = '0%';
+
+      if (serviceUrl) {
+        showSuccess(
+          `✅ Opening download service in a new tab.<br>
+           <small>If the tab didn't open, <a href="${serviceUrl}" target="_blank" rel="noopener" style="color:#ffd700;">click here</a>.</small>`
+        );
+        // Short delay so user sees the success message, then open
+        setTimeout(() => window.open(serviceUrl, '_blank', 'noopener'), 400);
+      } else {
+        showError('Could not build download link. Please try again.');
+      }
+    }
+
+    // ──────────────────────────────────────────────────────
+    // UI Helpers
+    // ──────────────────────────────────────────────────────
     function showLoading() {
       loading.style.display = 'block';
       result.style.display = 'none';
@@ -450,38 +535,21 @@
 
     function showSuccess(message) {
       result.className = 'result success';
-      result.innerHTML = `✅ ${message}`;
+      result.innerHTML = message;
       result.style.display = 'block';
     }
 
     function showError(message) {
       result.className = 'result error';
-      result.innerHTML = `❌ ${message}`;
+      result.innerHTML = message;
       result.style.display = 'block';
     }
 
-    // Preview functionality (would connect to backend in production)
-    videoUrlInput.addEventListener('input', debounce(async () => {
-      const url = videoUrlInput.value.trim();
-      if (isValidUrl(url)) {
-        // In production, fetch video info from backend
-        videoPreview.style.display = 'block';
-        thumbnail.src = 'https://via.placeholder.com/300x200/667eea/ffffff?text=Video+Preview';
-        videoTitle.textContent = 'Video Title (Preview)';
-      } else {
-        videoPreview.style.display = 'none';
-      }
-    }, 500));
-
     function debounce(func, wait) {
       let timeout;
-      return function executedFunction(...args) {
-        const later = () => {
-          clearTimeout(timeout);
-          func(...args);
-        };
+      return function (...args) {
         clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+        timeout = setTimeout(() => func(...args), wait);
       };
     }
   </script>
