@@ -361,6 +361,17 @@
     const progressFill = document.getElementById('progressFill');
     const progressText = document.getElementById('progressText');
 
+    // Set this in localStorage once after Railway deploy:
+    // localStorage.setItem('VIDEO_BACKEND_BASE_URL', 'https://your-service.up.railway.app')
+    const VIDEO_BACKEND_BASE_URL = (localStorage.getItem('VIDEO_BACKEND_BASE_URL') || '').replace(/\/$/, '');
+
+    function apiUrl(path) {
+      if (!VIDEO_BACKEND_BASE_URL) {
+        return path;
+      }
+      return `${VIDEO_BACKEND_BASE_URL}${path.replace(/^\/api/, '')}`;
+    }
+
     const DEFAULT_QUALITIES = [
       { value: '144p', label: '144p (Low Quality)' },
       { value: '360p', label: '360p (Standard Quality)' },
@@ -484,7 +495,7 @@
     }
 
     async function fetchJson(path, body, signal) {
-      const response = await fetch(path, {
+      const response = await fetch(apiUrl(path), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -521,7 +532,7 @@
         showLoading('Preparing secure direct download...');
         showProgress('Starting download...', 5);
 
-        const response = await fetch(path, {
+        const response = await fetch(apiUrl(path), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
