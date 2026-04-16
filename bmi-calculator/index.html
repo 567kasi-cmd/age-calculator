@@ -13,9 +13,13 @@
   <!-- 🔹 Open Graph (for SEO previews on Google, WhatsApp, Facebook) -->
   <meta property="og:title" content="BMI Calculator | The Age Finder" />
   <meta property="og:description" content="Check your BMI instantly with The Age Finder’s free online calculator. Simple, accurate, and quick." />
-  <meta property="og:url" content="https://theagefinder.pages.dev/bmi.html" />
+  <meta property="og:url" content="https://theagefinder.pages.dev/bmi-calculator/" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="/agecalc-preview.png" />
+  <link rel="canonical" href="https://theagefinder.pages.dev/bmi-calculator/" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="BMI Calculator | The Age Finder" />
+  <meta name="twitter:description" content="Free online BMI calculator to check your body mass index instantly." />
 
    <!-- 🔹 Google Analytics & Ads -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXWTMKPK1H"></script>
@@ -28,7 +32,22 @@
     gtag('config', 'G-YXWTMKPK1H');
   </script>
 
-  <link rel="stylesheet" href="/style.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "BMI Calculator",
+    "url": "https://theagefinder.pages.dev/bmi-calculator/",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "Any",
+    "description": "Free BMI calculator to estimate body mass index and weight category.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR"
+    }
+  }
+  </script>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -165,7 +184,7 @@
     <p>Check your Body Mass Index instantly and track your fitness level.</p>
     <div class="nav">
       <a href="/">🏠 Home</a>
-      <a href="/age-calculator/">🎂 Age Calculator</a>
+      <a href="/">🎂 Age Calculator</a>
       <a href="/bmi-calculator/">⚖️ BMI</a>
       <a href="/date-difference/">📅 Date Diff</a>
       <a href="/emi-calculator/">💵 EMI</a>

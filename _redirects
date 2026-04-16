@@ -8,3 +8,21 @@
 /emi-calculator/gold-loan.html             /emi-calculator/gold-loan             301
 /downloaders/video-downloader.html         /downloaders/video-downloader         301
 /agecalculator.html                        /age-calculator                       301
+
+# BMI duplicate consolidation
+/bmi                                       /bmi-calculator/                      301
+/bmi/                                      /bmi-calculator/                      301
+
+# Age calculator duplicate
+/age-calculator                            /                                     301
+/age-calculator/                           /                                     301
+
+# EMI trailing-slash normalization
+/emi-calculator/home-loan/                 /emi-calculator/home-loan             301
+/emi-calculator/personal-loan/            /emi-calculator/personal-loan         301
+/emi-calculator/car-loan/                  /emi-calculator/car-loan              301
+/emi-calculator/business-loan/            /emi-calculator/business-loan         301
+/emi-calculator/education-loan/           /emi-calculator/education-loan        301
+/emi-calculator/credit-card/              /emi-calculator/credit-card           301
+/emi-calculator/gold-loan/                /emi-calculator/gold-loan             301
+
