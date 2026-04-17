@@ -288,8 +288,8 @@
       <h1>Age Calculator</h1>
       <p>Select your date of birth:</p>
       <input type="date" id="dob" />
-      <button onclick="calculateAge()">Calculate</button>
-      <button id="reset" onclick="resetCalculator()">Reset</button>
+      <button type="button" data-action="calculate-age">Calculate</button>
+      <button type="button" id="reset" data-action="reset-age">Reset</button>
 
       <div class="result" id="result"></div>
     </div>
@@ -328,79 +328,6 @@
 
   <footer>© 2025 Age Calculator | Made with ❤️ </footer>
 
-  <script>
-    function calculateAge() {
-      const dobInput = document.getElementById('dob').value;
-      const result = document.getElementById('result');
-      const now = new Date();
-
-      if (!dobInput) {
-        result.innerHTML = "⚠️ Please select your birth date.";
-        return;
-      }
-
-      const dob = new Date(dobInput);
-      if (dob > now) {
-        result.innerHTML = "🚫 Birth date cannot be in the future.";
-        return;
-      }
-
-      if (dob.getDate() === now.getDate() && dob.getMonth() === now.getMonth() && dob.getFullYear() === now.getFullYear()) {
-        result.innerHTML = "🗓️ You entered today's date!";
-        return;
-      }
-
-      if (dob.getDate() === now.getDate() && dob.getMonth() === now.getMonth()) {
-        result.innerHTML = "🎉 Happy Birthday! 🥳";
-      }
-
-      const diffMs = now - dob;
-      const diffMins = Math.floor(diffMs / (1000 * 60));
-      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-      let years = now.getFullYear() - dob.getFullYear();
-      let months = now.getMonth() - dob.getMonth();
-      let days = now.getDate() - dob.getDate();
-
-      if (days < 0) {
-        months--;
-        const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-        days += prevMonth.getDate();
-      }
-
-      if (months < 0) {
-        years--;
-        months += 12;
-      }
-
-      let nextBirthday = new Date(now.getFullYear(), dob.getMonth(), dob.getDate());
-      if (nextBirthday < now) {
-        nextBirthday.setFullYear(now.getFullYear() + 1);
-      }
-      const daysUntilNextBirthday = Math.ceil((nextBirthday - now) / (1000 * 60 * 60 * 24));
-
-      let birthdayMsg = "";
-      if (dob.getDate() === now.getDate() && dob.getMonth() === now.getMonth()) {
-        birthdayMsg = "🎉 Happy Birthday! 🥳";
-      } else {
-        birthdayMsg = `⏳ <b>Days until your next birthday:</b> ${daysUntilNextBirthday} days`;
-      }
-
-      result.innerHTML = `
-        ${birthdayMsg}<br><br>
-        🎂 You are <b>${years}</b> years, <b>${months}</b> months, and <b>${days}</b> days old.<br><br>
-        ⏱️ That's approximately:<br>
-        <b>${diffDays.toLocaleString()}</b> days<br>
-        <b>${diffHours.toLocaleString()}</b> hours<br>
-        <b>${diffMins.toLocaleString()}</b> minutes
-      `;
-    }
-
-    function resetCalculator() {
-      document.getElementById('dob').value = "";
-      document.getElementById('result').innerHTML = "";
-    }
-  </script>
+  <script type="module" defer src="/scripts/pages/age-page.js"></script>
 </body>
 </html>

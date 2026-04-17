@@ -86,34 +86,6 @@
   </footer>
   </div>
 
-  <script>
-    function calculateEMI() {
-      const P = parseFloat(document.getElementById("amount").value);
-      const R = parseFloat(document.getElementById("rate").value) / 12 / 100;
-      const N = parseFloat(document.getElementById("months").value);
-      const resultDiv = document.getElementById("result");
-
-      if (isNaN(P) || isNaN(R) || isNaN(N) || N <= 0) {
-        resultDiv.innerHTML = "<p>Please enter valid values for all fields.</p>";
-        return;
-      }
-
-      const emi = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
-      const totalPayment = emi * N;
-      const totalInterest = totalPayment - P;
-
-      resultDiv.innerHTML = `
-        <h3>📊 Results</h3>
-        <p><strong>Monthly EMI:</strong> ₹${emi.toFixed(2)}</p>
-        <p><strong>Total Interest:</strong> ₹${totalInterest.toFixed(2)}</p>
-        <p><strong>Total Payment:</strong> ₹${totalPayment.toFixed(2)}</p>
-      `;
-    }
-
-    document.getElementById("emiForm").onsubmit = function(event) {
-      event.preventDefault();
-      calculateEMI();
-    };
-  </script>
+  <script type="module" defer src="/scripts/pages/credit-card-page.js"></script>
 </body>
 </html>

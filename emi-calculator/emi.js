@@ -1,18 +1,29 @@
-document.getElementById("emiForm")?.addEventListener("submit", function(e) {
-  e.preventDefault();
-
-  let P = parseFloat(document.getElementById("amount").value);
-  let R = parseFloat(document.getElementById("rate").value);
-  let N = parseInt(document.getElementById("months").value);
-
-  if (!P || !R || !N) {
-    document.getElementById("result").innerText = "Please fill all fields correctly.";
+(function () {
+  const form = document.getElementById("emiForm");
+  if (!form) {
     return;
   }
 
-  let monthlyRate = R / 12 / 100;
-  let emi = (P * monthlyRate * Math.pow(1 + monthlyRate, N)) / (Math.pow(1 + monthlyRate, N) - 1);
+  let modulePromise;
 
-  document.getElementById("result").innerText = `Your Monthly EMI: ₹${emi.toFixed(2)}`;
+  const getModule = function () {
+    if (!modulePromise) {
+      modulePromise = import("/scripts/calculators/emi-calculator.js");
+    }
 
-});
+    return modulePromise;
+  };
+
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const module = await getModule();
+    if (typeof module.calculateEmi === "function") {
+      module.calculateEmi();
+    }
+  });
+
+  ["focusin", "pointerdown", "touchstart"].forEach(function (eventName) {
+    form.addEventListener(eventName, getModule, { once: true });
+  });
+})();
