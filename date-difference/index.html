@@ -227,15 +227,17 @@
 
   <main>
     <div class="calculator">
+      <form id="dateDifferenceForm">
       <label for="date1">Start Date:</label>
       <input type="date" id="date1">
 
       <label for="date2">End Date:</label>
       <input type="date" id="date2">
 
-      <button onclick="calculateDifference()">Calculate Difference</button>
+      <button type="submit">Calculate Difference</button>
 
       <div class="result" id="result"></div>
+      </form>
     </div>
   </main>
 
@@ -243,26 +245,6 @@
     <a href="/">← Back to The Age Finder</a>
   </footer>
 
-  <script>
-    function calculateDifference() {
-      const date1 = new Date(document.getElementById('date1').value);
-      const date2 = new Date(document.getElementById('date2').value);
-
-      if (!date1 || !date2 || isNaN(date1) || isNaN(date2)) {
-        document.getElementById('result').innerHTML = "⚠️ Please select both dates.";
-        return;
-      }
-
-      const diffTime = Math.abs(date2 - date1);
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      const diffYears = Math.floor(diffDays / 365);
-      const diffMonths = Math.floor(diffDays / 30);
-
-      document.getElementById('result').innerHTML =
-        `Difference: <b>${diffDays}</b> days<br>
-        ≈ ${diffMonths} months<br>
-        ≈ ${diffYears} years`;
-    }
-  </script>
+  <script type="module" defer src="/scripts/pages/date-difference-page.js"></script>
 </body>
 </html>
