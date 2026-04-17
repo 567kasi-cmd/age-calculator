@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- 🔹 SEO & Branding -->
-  <title>📅 Date Difference Calculator | The Age Finder</title>
-  <meta name="description" content="Quickly find the difference between two dates in days, months, and years using The Age Finder’s free online Date Difference Calculator." />
+  <title>📅 Date Difference Calculator | Calculate Days Between Dates | The Age Finder</title>
+  <meta name="description" content="Quickly find the difference between two dates in days, months, and years using The Age Finder's free online Date Difference Calculator." />
   <meta name="keywords" content="date difference calculator, days between dates, months between dates, years calculator, time calculator, The Age Finder" />
   <meta name="author" content="The Age Finder Team" />
   <meta name="robots" content="index, follow" />
@@ -21,16 +21,10 @@
   <meta name="twitter:title" content="Date Difference Calculator | The Age Finder" />
   <meta name="twitter:description" content="Calculate the difference between two dates in days, months, and years instantly." />
 
-  <!-- 🔹 Google Analytics & Ads -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXWTMKPK1H"></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3098158884275893"
-     crossorigin="anonymous"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-YXWTMKPK1H');
-  </script>
+  <!-- 🔹 Shared styles + analytics (deferred) -->
+  <link rel="stylesheet" href="/styles/shared.css" />
+  <script defer src="/scripts/analytics.js"></script>
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -47,6 +41,48 @@
     }
   }
   </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I calculate the difference between two dates?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Select your start date and end date in the calculator above, then click 'Calculate Difference' to get the results in days, months, and years."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can this calculator handle different date formats?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, this calculator works with standard date formats. Simply select dates using the date picker for easy input."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the accuracy of date difference calculations?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The calculator provides precise date calculations down to the exact number of days between two dates."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use this for calculating age or project timelines?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, you can use it to calculate age or determine the duration of any project or event between two dates."
+        }
+      }
+    ]
+  }
+  </script>
+
   <style>
     body {
       font-family: 'Poppins', sans-serif;

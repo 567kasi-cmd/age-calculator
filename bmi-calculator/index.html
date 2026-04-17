@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- 🔹 SEO and Branding -->
-  <title>⚖️ BMI Calculator | The Age Finder</title>
+  <title>⚖️ BMI Calculator | Calculate Body Mass Index | The Age Finder</title>
   <meta name="description" content="Instantly calculate your Body Mass Index (BMI) with The Age Finder. Find out if you're underweight, healthy, overweight, or obese using our free online tool." />
   <meta name="keywords" content="BMI calculator, body mass index, health calculator, weight check, fitness, The Age Finder" />
   <meta name="author" content="The Age Finder Team" />
@@ -12,7 +12,7 @@
 
   <!-- 🔹 Open Graph (for SEO previews on Google, WhatsApp, Facebook) -->
   <meta property="og:title" content="BMI Calculator | The Age Finder" />
-  <meta property="og:description" content="Check your BMI instantly with The Age Finder’s free online calculator. Simple, accurate, and quick." />
+  <meta property="og:description" content="Check your BMI instantly with The Age Finder's free online calculator. Simple, accurate, and quick." />
   <meta property="og:url" content="https://theagefinder.pages.dev/bmi-calculator/" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="/agecalc-preview.png" />
@@ -21,16 +21,9 @@
   <meta name="twitter:title" content="BMI Calculator | The Age Finder" />
   <meta name="twitter:description" content="Free online BMI calculator to check your body mass index instantly." />
 
-   <!-- 🔹 Google Analytics & Ads -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXWTMKPK1H"></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3098158884275893"
-     crossorigin="anonymous"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-YXWTMKPK1H');
-  </script>
+  <!-- 🔹 Shared styles + analytics (deferred) -->
+  <link rel="stylesheet" href="/styles/shared.css" />
+  <script defer src="/scripts/analytics.js"></script>
 
   <script type="application/ld+json">
   {
@@ -48,6 +41,48 @@
     }
   }
   </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is BMI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "BMI (Body Mass Index) is a measure of body fat based on height and weight. It applies to adult men and women."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a healthy BMI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A BMI between 18.5 and 24.9 is considered normal weight. Below 18.5 is underweight, 25-29.9 is overweight, and above 30 is obese."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How accurate is the BMI calculator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The BMI calculator is a screening tool. For a complete health assessment, consult with a healthcare professional."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use this BMI calculator for children?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "BMI for children is calculated differently and varies by age and gender. Consult a pediatrician for children's BMI."
+        }
+      }
+    ]
+  }
+  </script>
+
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -69,12 +104,14 @@
       font-size: 2.2rem;
       color: #ffd700;
       text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+      margin: 0 0 10px 0;
     }
 
     header p {
       font-size: 1rem;
       opacity: 0.9;
       color: #fff;
+      margin: 0;
     }
 
     .nav {
@@ -120,6 +157,7 @@
       display: block;
       margin: 10px 0 5px;
       font-weight: 500;
+      text-align: left;
     }
 
     input {
@@ -129,6 +167,7 @@
       border: none;
       outline: none;
       margin-bottom: 10px;
+      font-size: 16px;
     }
 
     button {
@@ -139,6 +178,8 @@
       font-weight: 600;
       cursor: pointer;
       transition: 0.3s;
+      margin-top: 10px;
+      width: 90%;
     }
 
     button:hover {
@@ -175,6 +216,16 @@
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      main {
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 
@@ -183,25 +234,27 @@
     <h1>⚖️ BMI Calculator</h1>
     <p>Check your Body Mass Index instantly and track your fitness level.</p>
     <div class="nav">
-      <a href="/">🏠 Home</a>
-      <a href="/">🎂 Age Calculator</a>
-      <a href="/bmi-calculator/">⚖️ BMI</a>
-      <a href="/date-difference/">📅 Date Diff</a>
-      <a href="/emi-calculator/">💵 EMI</a>
+      <a href="/" title="Home">🏠 Home</a>
+      <a href="/" title="Age Calculator">🎂 Age Calculator</a>
+      <a href="/bmi-calculator/" title="BMI">⚖️ BMI</a>
+      <a href="/date-difference/" title="Date Difference">📅 Date Diff</a>
+      <a href="/emi-calculator/" title="EMI">💵 EMI</a>
     </div>
   </header>
 
   <main>
     <div class="calculator">
-      <label for="weight">Weight (kg)</label>
-      <input type="number" id="weight" placeholder="Enter weight in kilograms">
+      <form id="bmiForm">
+        <label for="weight">Weight (kg)</label>
+        <input type="number" id="weight" placeholder="Enter weight in kilograms" required aria-label="Weight in kilograms">
 
-      <label for="height">Height (cm)</label>
-      <input type="number" id="height" placeholder="Enter height in centimeters">
+        <label for="height">Height (cm)</label>
+        <input type="number" id="height" placeholder="Enter height in centimeters" required aria-label="Height in centimeters">
 
-      <button onclick="calculateBMI()">Calculate BMI</button>
+        <button type="submit">Calculate BMI</button>
 
-      <div class="result" id="result"></div>
+        <div class="result" id="result" aria-live="polite" aria-atomic="true"></div>
+      </form>
     </div>
   </main>
 
@@ -209,12 +262,15 @@
     <a href="/">← Back to The Age Finder</a>
   </footer>
 
-  <script>
-    function calculateBMI() {
+  <script defer>
+    // BMI Calculator Logic - Deferred for performance
+    document.getElementById('bmiForm')?.addEventListener('submit', function(e) {
+      e.preventDefault();
+
       const weight = parseFloat(document.getElementById('weight').value);
       const height = parseFloat(document.getElementById('height').value) / 100;
 
-      if (!weight || !height) {
+      if (!weight || !height || weight <= 0 || height <= 0) {
         document.getElementById('result').innerHTML = "⚠️ Please enter valid weight and height.";
         return;
       }
@@ -228,7 +284,7 @@
       else category = 'Obese';
 
       document.getElementById('result').innerHTML = `Your BMI is <b>${bmi}</b> (${category})`;
-    }
+    });
   </script>
 </body>
 </html>

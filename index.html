@@ -21,18 +21,13 @@
   <meta name="twitter:title" content="Age Calculator | The Age Finder" />
   <meta name="twitter:description" content="Find your exact age instantly with a free, accurate age calculator." />
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXWTMKPK1H"></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3098158884275893"
-     crossorigin="anonymous"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-YXWTMKPK1H');
-  </script>
+  <!-- Link to shared styles -->
+  <link rel="stylesheet" href="/styles/shared.css" />
 
-  <!-- 🔹 Structured data for Google (Organization) -->
+  <!-- Analytics (deferred for performance) -->
+  <script defer src="/scripts/analytics.js"></script>
+
+  <!-- 🔹 Structured data for Google (Organization + FAQ) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -56,6 +51,46 @@
       "price": "0",
       "priceCurrency": "INR"
     }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I calculate my exact age?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Enter your date of birth in the calculator above and click 'Calculate' to get your exact age in years, months, and days."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this age calculator accurate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! The Age Finder uses precise date calculations to provide your exact age including years, months, days, hours, and minutes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I calculate someone else's age?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, you can enter anyone's date of birth to calculate their age. Just select their birth date and click Calculate."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What other tools does The Age Finder offer?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Age Finder offers BMI Calculator, Date Difference Calculator, and EMI Calculators for various types of loans."
+        }
+      }
+    ]
   }
   </script>
 
@@ -95,6 +130,7 @@
       font-size: 16px;
       margin-top: 15px;
       outline: none;
+      box-sizing: border-box;
     }
 
     button {
@@ -115,7 +151,6 @@
       color: #fff;
     }
 
-    /* ✅ Reset button styling */
     button#reset {
       background-color: #ff5c5c;
       color: white;
@@ -132,7 +167,6 @@
       line-height: 1.6;
     }
 
-    /* ✅ Navigation bar styles */
     .nav {
       font-size: 13px;
       margin-bottom: 10px;
@@ -150,71 +184,29 @@
       opacity: 1;
     }
 
-    /* ✅ More Tools Section */
     .more-tools {
-      margin-top: 50px;
-      text-align: center;
-      color: #fff;
-    }
-
-    .more-tools h2 {
-      font-size: 1.6rem;
-      margin-bottom: 20px;
-      color: #ffd700;
-    }
-
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      justify-items: center;
-    }
-
-    .tool-card {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      padding: 20px;
-      border-radius: 15px;
-      text-decoration: none;
-      color: white;
-      transition: transform 0.2s ease, background 0.2s ease;
-      width: 90%;
-      max-width: 250px;
-    }
-
-    .tool-card:hover {
-      transform: scale(1.05);
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    footer {
-      margin-top: 40px;
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.8);
-    }
-     .more-tools {
       margin-top: 60px;
       text-align: center;
       color: #fff;
       animation: fadeIn 1s ease-in-out;
-      }
+    }
 
-     .more-tools h2 {
+    .more-tools h2 {
       font-size: 1.8rem;
       margin-bottom: 25px;
       color: #ffd700;
       text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-      }
+    }
 
-      .tools-grid {
+    .tools-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 25px;
       justify-items: center;
       padding: 0 20px;
-      }
+    }
 
-      .tool-card {
+    .tool-card {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
       padding: 25px 20px;
@@ -227,28 +219,45 @@
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       transform: translateY(0);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      }
+    }
 
-      .tool-card:hover {
+    .tool-card:hover {
       transform: translateY(-8px) scale(1.05);
       background: rgba(255, 255, 255, 0.25);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-      }
+    }
 
-      .tool-card .icon {
+    .tool-card .icon {
       font-size: 2.2rem;
       margin-bottom: 10px;
       transition: transform 0.3s ease;
-      }
+    }
 
-      .tool-card:hover .icon {
+    .tool-card:hover .icon {
       transform: rotate(10deg) scale(1.1);
-      }
+    }
 
-      @keyframes fadeIn {
+    .tool-card h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.1rem;
+    }
+
+    .tool-card p {
+      margin: 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    @keyframes fadeIn {
       from {
-      opacity: 0;
-      transform: translateY(30px);
+        opacity: 0;
+        transform: translateY(30px);
       }
       to {
         opacity: 1;
@@ -256,6 +265,19 @@
       }
     }
 
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .tool-card {
+        max-width: 100%;
+      }
+    }
   </style>
 </head>
 
