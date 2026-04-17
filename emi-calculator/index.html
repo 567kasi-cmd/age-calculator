@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>💵 EMI Calculators | The Age Finder</title>
-  <meta name="description" content="Use our free EMI Calculators for Home, Car, Personal, Business, and Education Loans. Instantly calculate your monthly EMIs and compare loan options.">
-  <meta name="keywords" content="EMI calculator, home loan EMI, personal loan EMI, car loan EMI, education loan EMI, loan comparison calculator">
+  <title>💵 EMI Calculators | Calculate Loan EMI Fast | The Age Finder</title>
+  <meta name="description" content="Use our free EMI Calculators for Home, Car, Personal, Business, and Education Loans. Instantly calculate your monthly EMIs and compare loan options with The Age Finder.">
+  <meta name="keywords" content="EMI calculator, home loan EMI, personal loan EMI, car loan EMI, education loan EMI, loan comparison calculator, monthly payment">
   <!-- 🔹 SEO + Branding metadata -->
   <link rel="canonical" href="https://theagefinder.pages.dev/emi-calculator/">
   <meta name="robots" content="index, follow">
@@ -22,6 +22,10 @@
 
   <meta name="application-name" content="The Age Finder">
   <meta name="author" content="The Age Finder">
+
+  <!-- 🔹 Shared styles + analytics (deferred) -->
+  <link rel="stylesheet" href="/styles/shared.css" />
+  <script defer src="/scripts/analytics.js"></script>
 
   <!-- 🔹 Structured data for Google -->
   <script type="application/ld+json">
@@ -40,6 +44,48 @@
     }
   }
   </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is EMI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "EMI (Equated Monthly Installment) is the fixed monthly payment amount you need to pay to repay your loan, including both principal and interest."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is EMI calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "EMI is calculated using the formula: EMI = (P × R × (1+R)^N) / ((1+R)^N - 1), where P is principal, R is monthly interest rate, and N is number of months."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use different loan types in your calculator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, we offer separate calculators for home loans, car loans, personal loans, education loans, business loans, credit cards, and gold loans."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the EMI calculation accurate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, our calculations are precise. However, the actual EMI may vary slightly based on bank policies and processing fees."
+        }
+      }
+    ]
+  }
+  </script>
+
   <style>
     body {
       font-family: 'Poppins', sans-serif;

@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- 🔹 SEO and Branding -->
-  <title>🎓 Education Loan EMI Calculator | The Age Finder</title>
-  <meta name="description" content="Calculate your Education Loan EMI instantly using The Age Finder. Get accurate results by entering your loan amount, interest rate, and tenure." />
-  <meta name="keywords" content="education loan EMI calculator, student loan EMI, education finance, loan calculator, The Age Finder" />
+  <title>🎓 Education Loan EMI Calculator | Student Loan Payment Calculator | The Age Finder</title>
+  <meta name="description" content="Calculate your Education Loan EMI instantly using The Age Finder. Get accurate results by entering your loan amount, interest rate, and tenure. Plan your study financing." />
+  <meta name="keywords" content="education loan EMI calculator, student loan EMI, education finance, loan calculator, The Age Finder, student loan payment" />
   <meta name="author" content="The Age Finder Team" />
   <meta name="robots" content="index, follow" />
 
@@ -20,6 +20,11 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Education Loan EMI Calculator | The Age Finder" />
   <meta name="twitter:description" content="Calculate education loan EMI, interest, and total repayment for study financing." />
+
+  <!-- 🔹 Shared styles + analytics (deferred) -->
+  <link rel="stylesheet" href="/styles/shared.css" />
+  <script defer src="/scripts/analytics.js"></script>
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -34,6 +39,47 @@
       "price": "0",
       "priceCurrency": "INR"
     }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is an education loan EMI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "An Education Loan EMI is the fixed monthly payment you make to repay your education loan. It includes both principal and interest."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is education loan EMI calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "EMI is calculated using: EMI = (Loan Amount × Monthly Rate × (1+Monthly Rate)^Tenure) / ((1+Monthly Rate)^Tenure - 1). Where Monthly Rate = Annual Rate / 12 / 100."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a moratorium period in education loans?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A moratorium period is the time during your studies or after graduation when you don't need to make EMI payments. Interest may still accrue during this period depending on the lender's policy."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are education loans tax deductible?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, in many countries like India, education loan interest is eligible for tax deduction under Section 80E, providing tax relief for borrowers."
+        }
+      }
+    ]
   }
   </script>
 
