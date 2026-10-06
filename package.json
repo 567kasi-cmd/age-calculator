@@ -2,13 +2,14 @@
   "name": "age-calculator",
   "private": true,
   "version": "1.0.0",
-  "description": "Age Calculator site with Cloudflare Pages Functions powered video downloader",
+  "description": "The Age Finder static calculator site",
   "scripts": {
     "dev": "wrangler pages dev .",
-    "check": "echo \"Cloudflare Pages Functions project\""
+    "check": "node scripts/check-production.mjs",
+    "deploy": "wrangler pages deploy ."
   },
   "devDependencies": {
-    "wrangler": "^3.99.0"
+    "wrangler": "^4.147.0"
   },
   "engines": {
     "node": ">=18.0.0"

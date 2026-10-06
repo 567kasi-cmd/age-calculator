@@ -1,4 +1,4 @@
-User-agent: *
+﻿User-agent: *
 Allow: /
 
-Sitemap: https://theagefinder.pages.dev/sitemap.xml
+Sitemap: https://theagefinder.online/sitemap.xml
